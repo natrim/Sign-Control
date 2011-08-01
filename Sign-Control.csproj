@@ -8,7 +8,7 @@
     <ProjectGuid>{EA5C73EC-88B5-4AFB-A2E7-D7DDF19C8E2A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClassLibrary1</RootNamespace>
+    <RootNamespace>SignControl</RootNamespace>
     <AssemblyName>Sign-Control</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -34,6 +34,15 @@
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="System" />
+    <Reference Include="TerrariaServer">
+      <HintPath>TerrariaServerBins\TerrariaServer.exe</HintPath>
+    </Reference>
+    <Reference Include="TerrariaServerAPI">
+      <HintPath>TerrariaServerBins\TerrariaServerAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="TShockAPI">
+      <HintPath>TerrariaServerBins\TShockAPI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SignControl.cs" />
