@@ -66,9 +66,12 @@ namespace SignControl
             var lines = new List<string>();
             foreach (var sign in Signs)
             {
-                if (sign.isLocked()) //save only protected signs
+                if (Sign.TileIsSign(sign.getPosition())) // save only if sign exists
                 {
-                    lines.Add(string.Format("{0}|{1}|{2}|{3}", sign.getID(), sign.getPosition().X, sign.getPosition().Y, sign.getPassword()));
+                    if (sign.isLocked()) //save only protected signs
+                    {
+                        lines.Add(string.Format("{0}|{1}|{2}|{3}", sign.getID(), sign.getPosition().X, sign.getPosition().Y, sign.getPassword()));
+                    }
                 }
             }
             File.WriteAllLines(SavePath, lines.ToArray());

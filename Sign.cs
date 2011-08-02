@@ -106,5 +106,28 @@ namespace SignControl
             string hash = BitConverter.ToString(cryptoTransformSHA1.ComputeHash(buffer)).Replace("-", "");
             return hash;
         }
+
+        public static bool TileIsSign(Terraria.Tile tile)
+        {
+            if (tile.type == 0x37 || tile.type == 0x55)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TileIsSign(Vector2 position)
+        {
+            int x = (int)position.X;
+            int y = (int)position.Y;
+
+            return TileIsSign(x, y);
+        }
+
+        public static bool TileIsSign(int x, int y)
+        {
+            return TileIsSign(Terraria.Main.tile[x, y]);
+        }
     }
 }

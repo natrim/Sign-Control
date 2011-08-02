@@ -251,7 +251,7 @@ namespace SignControl
                         y = reader.ReadInt32();
                         reader.Close();
 
-                        if (Main.tile[x, y].type == 0x37 || Main.tile[x, y].type == 0x55) //if is sign OR tombstone
+                        if (Sign.TileIsSign(x, y)) //if is sign OR tombstone
                         {
                             var id = Terraria.Sign.ReadSign(x, y);
                             var tplayer = TShock.Players[e.Msg.whoAmI];
