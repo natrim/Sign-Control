@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace SignControl
 {
-    [APIVersion(1, 6)]
+    [APIVersion(1, 7)]
     public class SignControl : TerrariaPlugin
     {
         public static bool Init = false;
