@@ -1,5 +1,6 @@
 ﻿using TShockAPI;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace SignControl
 {
@@ -13,6 +14,27 @@ namespace SignControl
 
             //everyone can unlock
             TShockAPI.Commands.ChatCommands.Add(new Command(UnLock, "sunlock", "unlocksign", "signunlock"));
+
+            //add permissions to db if not exists
+            bool perm = false;
+            foreach (Group group in TShock.Groups.groups)
+            {
+                if (group.Name != "superadmin")
+                {
+                    if (group.HasPermission("protectsign"))
+                    {
+                        perm = true;
+                    }
+                }
+            }
+            if (!perm)
+            {
+                List<string> permissions = new List<string>();
+                permissions.Add("protectsign");
+                permissions.Add("editallsigns");
+                permissions.Add("removesignprotection");
+                TShock.Groups.AddPermissions("trustedadmin", permissions);
+            }
         }
 
         private static void Set(CommandArgs args)
