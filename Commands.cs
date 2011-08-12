@@ -24,6 +24,7 @@ namespace SignControl
                     if (group.HasPermission("protectsign"))
                     {
                         perm = true;
+                        break; //we know that someone already has it, so stop
                     }
                 }
             }
