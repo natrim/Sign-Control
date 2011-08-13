@@ -48,6 +48,13 @@ namespace SignControl
                     sign.setPosition(new Vector2(int.Parse(args[1]), int.Parse(args[2])));
                     sign.setPassword(args[3], true);
                     sign.setID(int.Parse(args[0]));
+
+                    //check if sign still exists in world
+                    if (!Sign.TileIsSign(sign.getPosition()))
+                    {
+                        //sign dont exists - so reset it
+                        sign.reset();
+                    }
                 }
                 catch
                 {
