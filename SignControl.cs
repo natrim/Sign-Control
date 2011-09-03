@@ -4,11 +4,11 @@ using TerrariaAPI.Hooks;
 using TShockAPI;
 using System;
 using System.IO;
-using Microsoft.Xna.Framework;
+using System.Drawing;
 
 namespace SignControl
 {
-    [APIVersion(1, 7)]
+    [APIVersion(1, 8)]
     public class SignControl : TerrariaPlugin
     {
         public static bool Init = false;
@@ -59,7 +59,7 @@ namespace SignControl
             SignManager.Save(); //save signs
         }
 
-        void OnUpdate(GameTime obj)
+        void OnUpdate()
         {
             if (!Init && Main.worldID > 0)
             {
