@@ -32,12 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
     <Reference Include="TerrariaServer">
       <HintPath>TerrariaServerBins\TerrariaServer.exe</HintPath>
-    </Reference>
-    <Reference Include="TerrariaServerAPI">
-      <HintPath>TerrariaServerBins\TerrariaServerAPI.dll</HintPath>
     </Reference>
     <Reference Include="TShockAPI">
       <HintPath>TerrariaServerBins\TShockAPI.dll</HintPath>

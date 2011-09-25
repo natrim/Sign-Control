@@ -1,10 +1,8 @@
 ﻿using Terraria;
-using TerrariaAPI;
-using TerrariaAPI.Hooks;
+using Hooks;
 using TShockAPI;
 using System;
 using System.IO;
-using System.Drawing;
 
 namespace SignControl
 {
@@ -44,14 +42,6 @@ namespace SignControl
             ServerHooks.Leave += ServerHooks_Leave;
             GameHooks.Update += OnUpdate;
             WorldHooks.SaveWorld += OnSaveWorld;
-        }
-
-        public override void DeInitialize()
-        {
-            NetHooks.GetData -= NetHooks_GetData;
-            ServerHooks.Leave -= ServerHooks_Leave;
-            GameHooks.Update -= OnUpdate;
-            WorldHooks.SaveWorld -= OnSaveWorld;
         }
 
         void OnSaveWorld(bool resettime, System.ComponentModel.HandledEventArgs e)

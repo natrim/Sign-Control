@@ -2,7 +2,6 @@
 using TShockAPI;
 using System.Collections.Generic;
 using System.IO;
-using System.Drawing;
 
 namespace SignControl
 {
@@ -45,7 +44,7 @@ namespace SignControl
                 {
                     var sign = Signs[int.Parse(args[0])];
 
-                    sign.setPosition(new PointF(int.Parse(args[1]), int.Parse(args[2])));
+                    sign.setPosition(new Vector2(int.Parse(args[1]), int.Parse(args[2])));
                     sign.setPassword(args[3], true);
                     sign.setID(int.Parse(args[0]));
 

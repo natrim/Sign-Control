@@ -1,5 +1,4 @@
 ﻿using TShockAPI;
-using System.Drawing;
 using System.Collections.Generic;
 
 namespace SignControl

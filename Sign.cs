@@ -2,7 +2,6 @@
 using System.Text;
 using System.Security.Cryptography;
 using TShockAPI;
-using System.Drawing;
 
 namespace SignControl
 {
@@ -11,14 +10,14 @@ namespace SignControl
         protected int ID;
         protected int WorldID;
         protected string HashedPassword;
-        protected PointF Position;
+        protected Vector2 Position;
 
         public Sign()
         {
             ID = -1;
             WorldID = Terraria.Main.worldID;
             HashedPassword = "";
-            Position = new PointF(0, 0);
+            Position = new Vector2(0, 0);
         }
 
         public void reset()
@@ -36,17 +35,17 @@ namespace SignControl
             return ID;
         }
 
-        public void setPosition(PointF position)
+        public void setPosition(Vector2 position)
         {
             Position = position;
         }
 
         public void setPosition(int x, int y)
         {
-            Position = new PointF(x, y);
+            Position = new Vector2(x, y);
         }
 
-        public PointF getPosition()
+        public Vector2 getPosition()
         {
             return Position;
         }
@@ -117,7 +116,7 @@ namespace SignControl
             return false;
         }
 
-        public static bool TileIsSign(PointF position)
+        public static bool TileIsSign(Vector2 position)
         {
             int x = (int)position.X;
             int y = (int)position.Y;
