@@ -38,10 +38,20 @@ namespace SignControl
 
         public override void Initialize()
         {
-            NetHooks.GetData += new NetHooks.GetDataD(NetHooks_GetData);
+            NetHooks.GetData += NetHooks_GetData;
             ServerHooks.Leave += ServerHooks_Leave;
             GameHooks.Update += OnUpdate;
             WorldHooks.SaveWorld += OnSaveWorld;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            NetHooks.GetData -= NetHooks_GetData;
+            ServerHooks.Leave -= ServerHooks_Leave;
+            GameHooks.Update -= OnUpdate;
+            WorldHooks.SaveWorld -= OnSaveWorld;
+
+            base.Dispose(disposing);
         }
 
         void OnSaveWorld(bool resettime, System.ComponentModel.HandledEventArgs e)
