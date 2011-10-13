@@ -45,15 +45,15 @@ namespace SignControl
                     var sign = Signs[int.Parse(args[0])];
 
                     sign.setPosition(new Vector2(int.Parse(args[1]), int.Parse(args[2])));
-                    sign.setPassword(args[3], true);
+                    sign.setPassword(args[3], args[3] == "" ? false : true);
                     sign.setID(int.Parse(args[0]));
+                    if (args.Length == 5)
+                        sign.setWarp(args[4]);
 
                     //check if sign still exists in world
                     if (!Sign.TileIsSign(sign.getPosition()))
-                    {
                         //sign dont exists - so reset it
                         sign.reset();
-                    }
                 }
                 catch
                 {
@@ -74,10 +74,8 @@ namespace SignControl
             {
                 if (Sign.TileIsSign(sign.getPosition())) // save only if sign exists
                 {
-                    if (sign.isLocked()) //save only protected signs
-                    {
-                        lines.Add(string.Format("{0}|{1}|{2}|{3}", sign.getID(), sign.getPosition().X, sign.getPosition().Y, sign.getPassword()));
-                    }
+                    if (sign.isLocked() || sign.isWarping()) //save only protected signs
+                        lines.Add(string.Format("{0}|{1}|{2}|{3}|{4}", sign.getID(), sign.getPosition().X, sign.getPosition().Y, sign.getPassword(), sign.getWarp()));
                 }
             }
             File.WriteAllLines(SavePath, lines.ToArray());

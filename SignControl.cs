@@ -146,7 +146,6 @@ namespace SignControl
 
                                     player.setState(SettingState.None);
                                     break;
-
                                 case SettingState.UnLocking:
                                     if (sign.isLocked())
                                     {
@@ -171,6 +170,44 @@ namespace SignControl
 
                                     player.setState(SettingState.None);
                                     break;
+                                case SettingState.WarpSetting:
+                                    if ((sign.isLocked() && (tplayer.Group.HasPermission("editallsigns") || player.canEditSign(id)))
+                                        || !sign.isLocked())
+                                    {
+                                        sign.setWarp(player.WarpForSign);
+                                        player.SendMessage("This sign will now warp to : " + player.WarpForSign, Color.Plum);
+                                        messageSent = true;
+                                    }
+                                    else
+                                    {
+                                        player.SendMessage("This sign is protected!", Color.Red);
+                                        messageSent = true;
+                                    }
+                                    player.setState(SettingState.None);
+                                    break;
+                                case SettingState.DeletingWarp:
+                                    if (sign.isWarping())
+                                    {
+                                        if ((sign.isLocked() && (tplayer.Group.HasPermission("editallsigns") || player.canEditSign(id)))
+                                        || !sign.isLocked())
+                                        {
+                                            sign.setWarp("");
+                                            player.SendMessage("This sign is no longer warping.", Color.Red);
+                                            messageSent = true;
+                                        }
+                                        else
+                                        {
+                                            player.SendMessage("You don't have permission to edit this sign!", Color.Red);
+                                            messageSent = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        player.SendMessage("This sign is not warp-enabled.", Color.Red);
+                                        messageSent = true;
+                                    }
+                                    player.setState(SettingState.None);
+                                    break;
                             }
 
                             if (!messageSent)
@@ -178,24 +215,29 @@ namespace SignControl
                                 if (sign.isLocked())
                                 {
                                     if (tplayer.Group.HasPermission("editallsigns") || player.canEditSign(id))
-                                    {
                                         player.SendMessage("This sign is locked. You can edit it.", Color.Yellow);
-                                    }
                                     else
-                                    {
                                         player.SendMessage("This sign is locked. You can't edit it. You can unlock it using \"/sunlock PASSWORD\" command.", Color.Yellow);
-                                    }
                                 }
                                 else
-                                {
                                     player.SendMessage("This sign is not locked.", Color.Yellow);
+                            }
+
+                            if (sign.isWarping())
+                            {
+                                var warp = TShock.Warps.FindWarp(sign.getWarp());
+                                if (warp.WarpName != null)
+                                {
+                                    player.Teleport((int)warp.WarpPos.X, (int)warp.WarpPos.Y);
+                                    player.SendMessage("You have been teleported to " + warp.WarpName, Color.Blue);
                                 }
+                                else
+                                    player.SendMessage("Warp no longer exists!", Color.Red);
                             }
                         }
 
                         if (player.getState() != SettingState.None) //if player is still setting something - end his setting
                             player.setState(SettingState.None);
-
                     }
                     break;
 

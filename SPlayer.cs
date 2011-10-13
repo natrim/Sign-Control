@@ -8,6 +8,7 @@ namespace SignControl
         protected SettingState State = SettingState.None;
         public string PasswordForSign = "";
         protected List<int> UnlockedSigns = new List<int>();
+        public string WarpForSign = "";
 
         public SPlayer(int index)
             : base(index)
@@ -43,11 +44,7 @@ namespace SignControl
 
         public bool canEditSign(int id)
         {
-            if (UnlockedSigns.Contains(id))
-            {
-                return true;
-            }
-            return false;
+            return UnlockedSigns.Contains(id);
         }
     }
 
@@ -56,7 +53,9 @@ namespace SignControl
         None,
         Setting,
         Deleting,
-        UnLocking
+        UnLocking,
+        WarpSetting,
+        DeletingWarp
     }
 }
 

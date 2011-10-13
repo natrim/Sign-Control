@@ -11,6 +11,7 @@ namespace SignControl
         protected int WorldID;
         protected string HashedPassword;
         protected Vector2 Position;
+        protected string Warp;
 
         public Sign()
         {
@@ -45,6 +46,16 @@ namespace SignControl
             Position = new Vector2(x, y);
         }
 
+        public void setWarp(string warp)
+        {
+            Warp = warp;
+        }
+
+        public string getWarp()
+        {
+            return Warp;
+        }
+
         public Vector2 getPosition()
         {
             return Position;
@@ -55,26 +66,22 @@ namespace SignControl
             return HashedPassword != "" ? true : false;
         }
 
+        public bool isWarping()
+        {
+            return Warp != "" ? true : false;
+        }
+
         public bool checkPassword(string password)
         {
-            if (HashedPassword.Equals(SHA1(password)))
-            {
-                return true;
-            }
-
-            return false;
+            return HashedPassword.Equals(SHA1(password));
         }
 
         public void setPassword(string password)
         {
             if (password == "")
-            {
                 HashedPassword = "";
-            }
             else
-            {
                 HashedPassword = SHA1(password);
-            }
         }
 
         public void setPassword(string password, bool checkForHash)
@@ -83,14 +90,10 @@ namespace SignControl
             {
                 string pattern = @"^[0-9a-fA-F]{40}$";
                 if (System.Text.RegularExpressions.Regex.IsMatch(password, pattern)) //is SHA1 string
-                {
                     HashedPassword = password;
-                }
             }
             else
-            {
                 setPassword(password);
-            }
         }
 
         public string getPassword()
@@ -108,12 +111,7 @@ namespace SignControl
 
         public static bool TileIsSign(Terraria.Tile tile)
         {
-            if (tile.type == 0x37 || tile.type == 0x55)
-            {
-                return true;
-            }
-
-            return false;
+            return (tile.type == 0x37 || tile.type == 0x55);
         }
 
         public static bool TileIsSign(Vector2 position)
