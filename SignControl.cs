@@ -15,7 +15,6 @@ namespace SignControl
         public SignControl(Main game)
             : base(game)
         {
-            Order = 10;
         }
         public override string Name
         {
@@ -24,7 +23,7 @@ namespace SignControl
 
         public override Version Version
         {
-            get { return new Version(1, 0); }
+            get { return new Version(1, 1); }
         }
 
         public override string Author
