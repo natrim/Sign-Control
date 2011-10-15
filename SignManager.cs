@@ -7,7 +7,6 @@ namespace SignControl
 {
     class SignManager
     {
-
         private static Sign[] Signs = new Sign[Terraria.Sign.maxSigns];
         private static string ControlDirectory = Path.Combine(TShock.SavePath, "signcontrol");
         private static string SavePath = Path.Combine(ControlDirectory, Main.worldID + ".txt");
@@ -72,6 +71,8 @@ namespace SignControl
             var lines = new List<string>();
             foreach (var sign in Signs)
             {
+                if (sign == null)
+                    continue;
                 if (Sign.TileIsSign(sign.getPosition())) // save only if sign exists
                 {
                     if (sign.isLocked() || sign.isWarping()) //save only protected signs
