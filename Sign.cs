@@ -19,6 +19,7 @@ namespace SignControl
             WorldID = Terraria.Main.worldID;
             HashedPassword = "";
             Position = new Vector2(0, 0);
+            Warp = "";
         }
 
         public void reset()
@@ -63,12 +64,12 @@ namespace SignControl
 
         public bool isLocked()
         {
-            return HashedPassword != "" ? true : false;
+            return HashedPassword != "";
         }
 
         public bool isWarping()
         {
-            return Warp != "" ? true : false;
+            return Warp != "";
         }
 
         public bool checkPassword(string password)
