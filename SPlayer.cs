@@ -1,12 +1,12 @@
-﻿using TShockAPI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TShockAPI;
 
 namespace SignControl
 {
     public class SPlayer : TSPlayer
     {
-        protected SettingState State = SettingState.None;
         public string PasswordForSign = "";
+        protected SettingState State = SettingState.None;
         protected List<int> UnlockedSigns = new List<int>();
         public string WarpForSign = "";
 
@@ -15,34 +15,32 @@ namespace SignControl
         {
         }
 
-        public SettingState getState()
+        public SettingState GetState()
         {
             return State;
         }
 
-        public void setState(SettingState state)
+        public void SetState(SettingState state)
         {
             State = state;
         }
 
-        public void addSignAccess(int id)
+        public void AddSignAccess(int id)
         {
             UnlockedSigns.Add(id);
             PasswordForSign = "";
         }
 
-        public void removeSignAccess(int id)
+        public void RemoveSignAccess(int id)
         {
             if (UnlockedSigns.Contains(id))
-            {
                 UnlockedSigns.Remove(id);
-            }
 
             PasswordForSign = "";
         }
 
 
-        public bool canEditSign(int id)
+        public bool CanEditSign(int id)
         {
             return UnlockedSigns.Contains(id);
         }
@@ -58,4 +56,3 @@ namespace SignControl
         DeletingWarp
     }
 }
-
