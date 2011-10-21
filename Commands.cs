@@ -129,7 +129,7 @@ namespace SignControl
                     return;
                 }
 
-                Warp warp = TShock.Warps.FindWarp(args.Parameters[0]);
+                var warp = TShock.Warps.FindWarp(args.Parameters[0]);
                 if (warp.WarpName == null)
                 {
                     args.Player.SendMessage("That is an invalid warp name!", Color.Red);

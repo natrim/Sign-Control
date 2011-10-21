@@ -26,7 +26,7 @@ namespace SignControl
             if (!File.Exists(SavePath))
                 File.Create(SavePath).Close();
 
-            for (int i = 0; i < Signs.Length; i++)
+            for (var i = 0; i < Signs.Length; i++)
                 Signs[i] = new Sign();
 
             var error = false;
