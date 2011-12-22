@@ -232,14 +232,17 @@ namespace SignControl
                                     if (sign.IsLocked())
                                     {
                                         if (tplayer.Group.HasPermission("editallsigns") || player.CanEditSign(id))
-                                            player.SendMessage("This sign is locked. You can edit it.", Color.Yellow);
+                                            player.SendMessage("This sign is protected. You are able to edit it.", Color.Yellow);
                                         else
                                             player.SendMessage(
-                                                "This sign is locked. You can't edit it. You can unlock it using \"/sunlock PASSWORD\" command.",
+                                                "This sign is protected. You are not able to edit it.",
+                                                Color.Yellow);
+									        player.SendMessage(
+                                                "( If you know the password, you can unlock it using \"/sunlock PASSWORD\" command. )",
                                                 Color.Yellow);
                                     }
                                     else
-                                        player.SendMessage("This sign is not locked.", Color.Yellow);
+                                        player.SendMessage("This sign is not protected.", Color.Yellow);
                                 }
 
                                 if (sign.IsWarping())
@@ -287,7 +290,7 @@ namespace SignControl
                                         {
                                             e.Handled = true;
                                             tplayer.SendMessage(
-                                                "This sign is locked with password. Your changes would be not visible to other players.",
+                                                "This sign is protected with password. Your changes would be not visible to other players.",
                                                 Color.IndianRed);
                                             tplayer.SendMessage(
                                                 "( To edit this sign unlock it using \"/sunlock PASSWORD\" command. )",
