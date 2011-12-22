@@ -8,7 +8,7 @@ using Terraria;
 
 namespace SignControl
 {
-    [APIVersion(1, 8)]
+    [APIVersion(1, 10)]
     public class SignControl : TerrariaPlugin
     {
         public static bool Init;
