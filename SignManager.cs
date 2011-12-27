@@ -60,7 +60,7 @@ namespace SignControl
         {
             File.WriteAllLines(SavePath, (from sign in Signs
                                           where sign != null
-                                          where Sign.TileIsSign(sign.GetPosition())
+                                          //problem with 1.1 saving - i think it will be enough to check it on load: where Sign.TileIsSign(sign.GetPosition())
                                           where sign.IsLocked() || sign.IsWarping()
                                           select string.Format("{0}|{1}|{2}|{3}|{4}", sign.GetID(), sign.GetPosition().X, sign.GetPosition().Y, sign.GetPassword(), sign.GetWarp())).ToArray());
         }
