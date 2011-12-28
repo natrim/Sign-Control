@@ -299,7 +299,7 @@ namespace SignControl
                                             tplayer.SendMessage(
                                                 "( To edit this sign unlock it using \"/sunlock PASSWORD\" command. )",
                                                 Color.IndianRed);
-                                            tplayer.SendData(PacketTypes.SignNew, Main.sign[id].text, id);
+                                            tplayer.SendData(PacketTypes.SignNew, "", id);
                                             return;
                                         }
                                     }
