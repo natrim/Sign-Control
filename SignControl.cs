@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.IO;
 using Hooks;
 using TShockAPI;
@@ -19,22 +20,22 @@ namespace SignControl
 
         public override string Name
         {
-            get { return "Sign Control"; }
+            get { return AssemblyTitleAttribute; }
         }
 
         public override Version Version
         {
-            get { return new Version(1, 1, 2); } //TODO: copy Deathmax's auto version check
+            get { return Assembly.GetExecutingAssembly().GetName().Version; } //TODO: copy and adopt Deathmax's auto version check
         }
 
         public override string Author
         {
-            get { return "Natrim & Inspired by Deathmax's Chest-Control"; }
+            get { return AssemblyCompanyAttribute; }
         }
 
         public override string Description
         {
-            get { return "Gives you control over signs."; }
+            get { return AssemblyDescriptionAttribute; }
         }
 
         public override void Initialize()
