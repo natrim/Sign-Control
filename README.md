@@ -11,7 +11,7 @@ _/scset_ - Stops selecting of sign
 _/sunlock_  _password_ -  Unlocks signs for editing until logout
 
 ### Permissions:
-Everyone can use _/sunlock_ command.
+_canunlocksign_ - permission for _/sunlock_ command - on install added to default register group
 
 _protectsign_ - can protect signs
 

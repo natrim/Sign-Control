@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TShockAPI;
-using TShockAPI.DB;
+﻿using TShockAPI;
 
 namespace SignControl
 {
@@ -9,21 +6,15 @@ namespace SignControl
     {
         public static void Load()
         {
-            TShockAPI.Commands.ChatCommands.Add(new Command("protectsign", Set, "sset", "setsign"));
-            TShockAPI.Commands.ChatCommands.Add(new Command("protectsign", UnSet, "sunset", "unsetsign"));
-            TShockAPI.Commands.ChatCommands.Add(new Command("protectsign", CancelSet, "scset", "scunset",
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.protectsign, Set, "sset", "setsign") { DoLog = false });
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.protectsign, UnSet, "sunset", "unsetsign") { DoLog = false });
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.protectsign, CancelSet, "scset", "scunset",
                                                             "cancelsetsign", "cancelunsetsign"));
-            TShockAPI.Commands.ChatCommands.Add(new Command("warpsign", WarpSet, "swarpset", "ssetwarp", "swset"));
-            TShockAPI.Commands.ChatCommands.Add(new Command("warpsign", WarpUnSet, "swarpunset", "sunsetwarp", "swunset"));
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.warpsign, WarpSet, "swarpset", "ssetwarp", "swset"));
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.warpsign, WarpUnSet, "swarpunset", "sunsetwarp", "swunset"));
 
-            //everyone can unlock
-            TShockAPI.Commands.ChatCommands.Add(new Command(UnLock, "sunlock", "unlocksign", "signunlock"));
-
-            //add permissions to db if not exists
-            var perm = TShock.Groups.groups.Where(@group => @group.Name != "superadmin").Any(@group => group.HasPermission("protectsign"));
-            if (perm) return;
-            var permissions = new List<string> {"protectsign", "editallsigns", "removesignprotection"};
-            TShock.Groups.AddPermissions("trustedadmin", permissions);
+            //every registered pony can unlock - changeable with the permission
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.canunlocksign, UnLock, "sunlock", "unlocksign", "signunlock") { DoLog = false });
         }
 
         private static void Set(CommandArgs args)
@@ -58,7 +49,7 @@ namespace SignControl
             }
             else
             {
-                if (args.Player.Group.HasPermission("editallsigns"))
+                if (args.Player.Group.HasPermission(Permissions.editallsigns))
                 {
                     args.Player.SendMessage(
                         "You dont need to unlock signs because you have permission to edit all signs!", Color.BlueViolet);
@@ -87,7 +78,7 @@ namespace SignControl
             }
             else
             {
-                if (args.Player.Group.HasPermission("removesignprotection"))
+                if (args.Player.Group.HasPermission(Permissions.removesignprotection))
                 {
                     SignControl.Players[args.Player.Index].SetState(SettingState.Deleting);
                     args.Player.SendMessage("Open a sign to delete it's protection.", Color.BlueViolet);

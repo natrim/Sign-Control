@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.IO;
 using Hooks;
 using TShockAPI;
-using TShockAPI.DB;
 using Terraria;
 
 namespace SignControl
@@ -11,7 +10,6 @@ namespace SignControl
     [APIVersion(1, 10)]
     public class SignControl : TerrariaPlugin
     {
-        public static bool Init;
         public static SPlayer[] Players = new SPlayer[Main.maxNetPlayers];
 
         public SignControl(Main game)
@@ -43,17 +41,20 @@ namespace SignControl
         {
             NetHooks.GetData += NetHooks_GetData;
             ServerHooks.Leave += ServerHooks_Leave;
-            GameHooks.Update += OnUpdate;
+			GameHooks.PostInitialize += OnPostInitialize;
             WorldHooks.SaveWorld += OnSaveWorld;
         }
 
         protected override void Dispose(bool disposing)
         {
-            NetHooks.GetData -= NetHooks_GetData;
-            ServerHooks.Leave -= ServerHooks_Leave;
-            GameHooks.Update -= OnUpdate;
-            WorldHooks.SaveWorld -= OnSaveWorld;
-
+            if(disposing)
+			{
+				NetHooks.GetData -= NetHooks_GetData;
+            	ServerHooks.Leave -= ServerHooks_Leave;
+				GameHooks.PostInitialize -= OnPostInitialize;
+            	WorldHooks.SaveWorld -= OnSaveWorld;
+			}
+			
             base.Dispose(disposing);
         }
 
@@ -69,19 +70,18 @@ namespace SignControl
             }
         }
 
-        private void OnUpdate()
+        private void OnPostInitialize()
         {
-            if (!Init && Main.worldID > 0)
-            {
-                Console.WriteLine("Initiating Sign-Control...");
-                SignManager.Load();
-                Commands.Load();
-                for (int i = 0; i < Players.Length; i++)
-                {
-                    Players[i] = new SPlayer(i);
-                }
-                Init = true;
-            }
+			Console.WriteLine("Initiating Sign-Control...");
+			
+			SignManager.Load();
+			Permissions.Load();
+			Commands.Load();
+
+			for (int i = 0; i < Players.Length; i++)
+			{
+				Players[i] = new SPlayer(i);
+			}
         }
 
         private void ServerHooks_Leave(int obj)
@@ -136,7 +136,7 @@ namespace SignControl
                                     case SettingState.Deleting:
                                         if (sign.IsLocked())
                                         {
-                                            if (tplayer.Group.HasPermission("removesignprotection") ||
+                                            if (tplayer.Group.HasPermission(Permissions.removesignprotection) ||
                                                 sign.CheckPassword(player.PasswordForSign))
                                             {
                                                 sign.Reset();
@@ -185,7 +185,7 @@ namespace SignControl
                                         break;
                                     case SettingState.WarpSetting:
                                         if ((sign.IsLocked() &&
-                                             (tplayer.Group.HasPermission("editallsigns") || player.CanEditSign(id)))
+                                             (tplayer.Group.HasPermission(Permissions.editallsigns) || player.CanEditSign(id)))
                                             || !sign.IsLocked())
                                         {
                                             sign.SetWarp(player.WarpForSign);
@@ -204,7 +204,7 @@ namespace SignControl
                                         if (sign.IsWarping())
                                         {
                                             if ((sign.IsLocked() &&
-                                                 (tplayer.Group.HasPermission("editallsigns") || player.CanEditSign(id)))
+                                                 (tplayer.Group.HasPermission(Permissions.editallsigns) || player.CanEditSign(id)))
                                                 || !sign.IsLocked())
                                             {
                                                 sign.SetWarp("");
@@ -231,7 +231,7 @@ namespace SignControl
                                 {
                                     if (sign.IsLocked())
                                     {
-                                        if (tplayer.Group.HasPermission("editallsigns") || player.CanEditSign(id))
+                                        if (tplayer.Group.HasPermission(Permissions.editallsigns) || player.CanEditSign(id))
 										{
                                             player.SendMessage("This sign is protected. You are able to edit it.", Color.Yellow);
 										}
@@ -251,7 +251,7 @@ namespace SignControl
 
                                 if (sign.IsWarping())
                                 {
-                                    Warp warp = TShock.Warps.FindWarp(sign.GetWarp());
+                                    var warp = TShock.Warps.FindWarp(sign.GetWarp());
                                     if (warp.WarpName != null)
                                     {
                                         player.Teleport((int) warp.WarpPos.X, (int) warp.WarpPos.Y);
@@ -289,7 +289,7 @@ namespace SignControl
 
                                     if (sign.IsLocked())
                                     {
-                                        if (!tplayer.Group.HasPermission("editallsigns") && !player.CanEditSign(id))
+                                        if (!tplayer.Group.HasPermission(Permissions.editallsigns) && !player.CanEditSign(id))
                                             //if player doesnt have permission, then break and message
                                         {
                                             e.Handled = true;
@@ -332,8 +332,8 @@ namespace SignControl
                             	{
 									var tplayer = TShock.Players[e.Msg.whoAmI];
 								
-									if (tplayer.Group.HasPermission("removesignprotection") ||
-                                            tplayer.Group.HasPermission("protectsign"))
+									if (tplayer.Group.HasPermission(Permissions.removesignprotection) ||
+                                            tplayer.Group.HasPermission(Permissions.protectsign))
                                             //display more verbose info to player who has permission to remove protection on this chest
                                     {
                                     	tplayer.SendMessage(
