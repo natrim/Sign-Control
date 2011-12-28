@@ -319,33 +319,31 @@ namespace SignControl
                             var y = reader.ReadInt32();
                             reader.Close();
 
-                            if (Sign.TileIsSign(x, y)) //if is sign OR tombstone
-                            {
-                                var id = Terraria.Sign.ReadSign(x, y);
-                                var tplayer = TShock.Players[e.Msg.whoAmI];
+                            var id = Terraria.Sign.ReadSign(x, y);
 
-                                if (id != -1) //if have found sign
-                                {
-                                    var sign = SignManager.GetSign(id);
-                                    if (sign.IsLocked()) //if locked stop removing
-                                    {
-                                        if (tplayer.Group.HasPermission("removesignprotection") ||
+                            if (id != -1) //if have found sign
+                            {
+                            	var sign = SignManager.GetSign(id);
+                            	if (sign.IsLocked()) //if locked stop removing
+                            	{
+									var tplayer = TShock.Players[e.Msg.whoAmI];
+								
+									if (tplayer.Group.HasPermission("removesignprotection") ||
                                             tplayer.Group.HasPermission("protectsign"))
                                             //display more verbose info to player who has permission to remove protection on this chest
-                                        {
-                                            tplayer.SendMessage(
+                                    {
+                                    	tplayer.SendMessage(
                                                 "This sign is protected. To remove it, first remove protection using \"/sunset\" command.",
                                                 Color.Red);
-                                        }
-                                        else
-                                        {
-                                            tplayer.SendMessage("This sign is protected!", Color.Red);
-                                        }
-
-                                        tplayer.SendTileSquare(x, y);
-                                        e.Handled = true;
                                     }
-                                }
+                                    else
+                                    {
+                                        tplayer.SendMessage("This sign is protected!", Color.Red);
+                                    }
+
+                                    tplayer.SendTileSquare(x, y);
+                                 	e.Handled = true;
+                                 }
                             }
                         }
                         break;

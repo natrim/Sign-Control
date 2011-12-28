@@ -106,23 +106,5 @@ namespace SignControl
             using (var cryptoTransformSHA1 = new SHA1CryptoServiceProvider())
                 return BitConverter.ToString(cryptoTransformSHA1.ComputeHash(buffer)).Replace("-", "");
         }
-
-        public static bool TileIsSign(Tile tile)
-        {
-            return (tile.type == 0x37 || tile.type == 0x55);
-        }
-
-        public static bool TileIsSign(Vector2 position)
-        {
-            var x = (int) position.X;
-            var y = (int) position.Y;
-
-            return TileIsSign(x, y);
-        }
-
-        public static bool TileIsSign(int x, int y)
-        {
-            return TileIsSign(Main.tile[x, y]);
-        }
     }
 }

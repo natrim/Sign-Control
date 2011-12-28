@@ -34,18 +34,27 @@ namespace SignControl
                 var args in File.ReadAllLines(SavePath).Select(line => line.Split('|')).Where(args => args.Length >= 4))
                 try
                 {
-                    var sign = Signs[int.Parse(args[0])];
+                    var sign = new Sign();
 
+					sign.SetID(int.Parse(args[0]));
                     sign.SetPosition(new Vector2(int.Parse(args[1]), int.Parse(args[2])));
                     sign.SetPassword(args[3], args[3] != "");
-                    sign.SetID(int.Parse(args[0]));
+                    
                     if (args.Length == 5)
                         sign.SetWarp(args[4]);
 
                     //check if sign still exists in world
-                    if (!Sign.TileIsSign(sign.GetPosition()))
-                        //sign dont exists - so reset it
-                        sign.Reset();
+					var id = Terraria.Sign.ReadSign((int) sign.GetPosition().X, (int) sign.GetPosition().Y);
+                    if (id != 1)
+					{	
+						//the id of sign changed
+						if(id != sign.GetID())
+							sign.SetID(id);
+						
+						//add to array
+						if (Signs.Length > sign.GetID())
+							Signs[sign.GetID()] = sign;
+					}
                 }
                 catch
                 {
@@ -60,7 +69,6 @@ namespace SignControl
         {
             File.WriteAllLines(SavePath, (from sign in Signs
                                           where sign != null
-                                          //problem with 1.1 saving - i think it will be enough to check it on load: where Sign.TileIsSign(sign.GetPosition())
                                           where sign.IsLocked() || sign.IsWarping()
                                           select string.Format("{0}|{1}|{2}|{3}|{4}", sign.GetID(), sign.GetPosition().X, sign.GetPosition().Y, sign.GetPassword(), sign.GetWarp())).ToArray());
         }
