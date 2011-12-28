@@ -39,10 +39,15 @@ namespace SignControl
             PasswordForSign = "";
         }
 
-
         public bool CanEditSign(int id)
         {
             return UnlockedSigns.Contains(id);
+        }
+		
+        public static void RemoveSignAccessFromAll(int id)
+        {
+        	foreach(SPlayer pl in SignControl.Players)
+        		pl.RemoveSignAccess(id);
         }
     }
 

@@ -140,7 +140,7 @@ namespace SignControl
                                                 sign.CheckPassword(player.PasswordForSign))
                                             {
                                                 sign.Reset();
-                                                player.RemoveSignAccess(id); //remove access to this sign
+                                                SPlayer.RemoveSignAccessFromAll(id); //remove access to this sign
 
                                                 player.SendMessage("Sign protection removed!", Color.Red);
                                                 messageSent = true;
