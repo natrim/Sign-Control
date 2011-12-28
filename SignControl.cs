@@ -24,7 +24,7 @@ namespace SignControl
 
         public override Version Version
         {
-            get { return new Version(1, 1, 2); }
+            get { return new Version(1, 1, 2); } //TODO: copy Deathmax's auto version check
         }
 
         public override string Author
@@ -74,10 +74,12 @@ namespace SignControl
         {
 			Console.WriteLine("Initiating Sign-Control...");
 			
+			//TODO: full support for reloadplugins command ( DeInitialize and better Dispose )
 			SignManager.Load();
 			Permissions.Load();
 			Commands.Load();
-
+			
+			//TODO: lazy loading
 			for (int i = 0; i < Players.Length; i++)
 			{
 				Players[i] = new SPlayer(i);
@@ -278,7 +280,9 @@ namespace SignControl
                                 var x = reader.ReadInt32();
                                 var y = reader.ReadInt32();
                                 reader.Close();
-
+							
+								//FIXME: hacked clients can theoreticaly bypass it ( seems like it checks by id only ) - needs testing
+							
                                 var id = Terraria.Sign.ReadSign(x, y);
                                 var player = Players[e.Msg.whoAmI];
                                 var tplayer = TShock.Players[e.Msg.whoAmI];
