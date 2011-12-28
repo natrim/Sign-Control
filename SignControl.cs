@@ -232,14 +232,18 @@ namespace SignControl
                                     if (sign.IsLocked())
                                     {
                                         if (tplayer.Group.HasPermission("editallsigns") || player.CanEditSign(id))
+										{
                                             player.SendMessage("This sign is protected. You are able to edit it.", Color.Yellow);
+										}
                                         else
+										{
                                             player.SendMessage(
                                                 "This sign is protected. You are not able to edit it.",
                                                 Color.Yellow);
 									        player.SendMessage(
                                                 "( If you know the password, you can unlock it using \"/sunlock PASSWORD\" command. )",
                                                 Color.Yellow);
+										}
                                     }
                                     else
                                         player.SendMessage("This sign is not protected.", Color.Yellow);
