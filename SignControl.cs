@@ -11,7 +11,7 @@ namespace SignControl
     [APIVersion(1, 10)]
     public class SignControl : TerrariaPlugin
     {
-        public static SPlayer[] Players = new SPlayer[Main.maxNetPlayers];
+        public static SPlayer[] Players;
 
         public SignControl(Main game)
             : base(game)
@@ -42,6 +42,7 @@ namespace SignControl
         {
             NetHooks.GetData += NetHooks_GetData;
             ServerHooks.Leave += ServerHooks_Leave;
+			GameHooks.Initialize += OnInitialize;
 			GameHooks.PostInitialize += OnPostInitialize;
             WorldHooks.SaveWorld += OnSaveWorld;
         }
@@ -52,6 +53,7 @@ namespace SignControl
 			{
 				NetHooks.GetData -= NetHooks_GetData;
             	ServerHooks.Leave -= ServerHooks_Leave;
+				GameHooks.Initialize -= OnInitialize;
 				GameHooks.PostInitialize -= OnPostInitialize;
             	WorldHooks.SaveWorld -= OnSaveWorld;
 			}
@@ -70,17 +72,20 @@ namespace SignControl
                 Console.WriteLine(ex);
             }
         }
-
-        private void OnPostInitialize()
-        {
-			Console.WriteLine("Initiating Sign-Control...");
-			
-			//TODO: full support for reloadplugins command ( DeInitialize and better Dispose )
-			SignManager.Load();
+		
+		private void OnInitialize()
+		{
 			Permissions.Load();
 			Commands.Load();
+		}
+		
+        private void OnPostInitialize()
+        {			
+			//TODO: full support for reloadplugins command ( DeInitialize and better Dispose )
+			SignManager.Load();
 			
 			//TODO: lazy loading
+			Players = new SPlayer[Main.maxNetPlayers];
 			for (int i = 0; i < Players.Length; i++)
 			{
 				Players[i] = new SPlayer(i);
