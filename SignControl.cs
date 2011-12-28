@@ -139,7 +139,7 @@ namespace SignControl
                                             if (tplayer.Group.HasPermission(Permissions.removesignprotection) ||
                                                 sign.CheckPassword(player.PasswordForSign))
                                             {
-                                                sign.Reset();
+                                                sign.SetPassword("");
                                                 SPlayer.RemoveSignAccessFromAll(id); //remove access to this sign
 
                                                 player.SendMessage("Sign protection removed!", Color.Red);

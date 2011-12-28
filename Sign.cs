@@ -23,11 +23,6 @@ namespace SignControl
             Warp = "";
         }
 
-        public void Reset()
-        {
-            HashedPassword = "";
-        }
-
         public void SetID(int id)
         {
             ID = id;
