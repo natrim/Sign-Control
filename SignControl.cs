@@ -90,6 +90,9 @@ namespace SignControl
 			{
 				Players[i] = new SPlayer();
 			}
+			
+			//check for update
+			new System.Threading.Thread(UpdateChecker).Start();
         }
 
         private void ServerHooks_Leave(int obj)
@@ -375,6 +378,28 @@ namespace SignControl
             {
                 Console.WriteLine(ex);
             }
+        }
+		
+        private void UpdateChecker()
+        {
+            string raw;
+            try
+            {
+                raw = new System.Net.WebClient().DownloadString("https://raw.github.com/natrim/Sign-Control/master/release.txt");
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            var list = raw.Split('\n');
+            Version version;
+            if (!Version.TryParse(list[0], out version)) return;
+            if (Version.CompareTo(version) >= 0) return;
+            TShock.Utils.Broadcast(string.Format(Messages.version, version), Color.Yellow);
+            if (list.Length > 1)
+                for (var i = 1; i < list.Length; i++)
+					if(list[i].Trim() != "")
+                    	TShock.Utils.Broadcast(list[i], Color.Yellow);
         }
     }
 }

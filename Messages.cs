@@ -49,6 +49,6 @@ namespace SignControl
 		public static readonly string warpable = "make it warp-able";
 		public static readonly string unwarpable = "delete its warp";
 		
-		
+		public static readonly string version = "New Sign-Control release is available: v{0}";	
 	}
 }
