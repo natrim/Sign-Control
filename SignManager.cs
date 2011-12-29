@@ -28,7 +28,10 @@ namespace SignControl
 			
 			//TODO: lazy loading of signs ( null checks )
             for (var i = 0; i < Signs.Length; i++)
+			{
                 Signs[i] = new Sign();
+				Signs[i].SetID(i);
+			}
 
             var error = false;
             foreach (
