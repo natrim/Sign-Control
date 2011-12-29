@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
-using TShockAPI;
 
 namespace SignControl
 {
-    public class SPlayer : TSPlayer
+    public class SPlayer
     {
         public string PasswordForSign = "";
         protected SettingState State = SettingState.None;
         protected List<int> UnlockedSigns = new List<int>();
         public string WarpForSign = "";
 
-        public SPlayer(int index)
-            : base(index)
+        public SPlayer()
         {
         }
 

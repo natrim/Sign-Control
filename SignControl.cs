@@ -88,13 +88,13 @@ namespace SignControl
 			Players = new SPlayer[Main.maxNetPlayers];
 			for (int i = 0; i < Players.Length; i++)
 			{
-				Players[i] = new SPlayer(i);
+				Players[i] = new SPlayer();
 			}
         }
 
         private void ServerHooks_Leave(int obj)
         {
-            Players[obj] = new SPlayer(obj);
+            Players[obj] = new SPlayer();
         }
 
         private void NetHooks_GetData(GetDataEventArgs e)
@@ -112,7 +112,7 @@ namespace SignControl
                             reader.Close();
 
                             int id = Terraria.Sign.ReadSign(x, y);
-                            SPlayer player = Players[e.Msg.whoAmI];
+                            SPlayer splayer = Players[e.Msg.whoAmI];
                             TSPlayer tplayer = TShock.Players[e.Msg.whoAmI];
 
                             if (id != -1)
@@ -120,118 +120,120 @@ namespace SignControl
                                 Sign sign = SignManager.GetSign(id);
                                 bool messageSent = false;
 
-                                switch (player.GetState())
+                                switch (splayer.GetState())
                                 {
                                     case SettingState.Setting:
                                         if (sign.IsLocked())
                                         {
-                                            player.SendMessage("This sign is already protected!", Color.Red);
+                                            tplayer.SendMessage("This sign is already protected!", Color.Red);
                                             messageSent = true;
                                         }
                                         else
                                         {
                                             sign.SetID(id);
                                             sign.SetPosition(x, y);
-                                            sign.SetPassword(player.PasswordForSign);
-                                            player.AddSignAccess(id); //unlock this sign for him
+                                            sign.SetPassword(splayer.PasswordForSign);
+                                            splayer.AddSignAccess(id); //unlock this sign for him
 
-                                            player.SendMessage("This sign is now protected.", Color.Red);
+                                            tplayer.SendMessage("This sign is now protected.", Color.Red);
                                             messageSent = true;
                                         }
 
-                                        player.SetState(SettingState.None);
+                                        splayer.SetState(SettingState.None);
                                         break;
                                     case SettingState.Deleting:
                                         if (sign.IsLocked())
                                         {
                                             if (tplayer.Group.HasPermission(Permissions.removesignprotection) ||
-                                                sign.CheckPassword(player.PasswordForSign))
+                                                sign.CheckPassword(splayer.PasswordForSign))
                                             {
                                                 sign.SetPassword("");
                                                 SPlayer.RemoveSignAccessFromAll(id); //remove access to this sign
 
-                                                player.SendMessage("Sign protection removed!", Color.Red);
+                                                tplayer.SendMessage("Sign protection removed!", Color.Red);
                                                 messageSent = true;
                                             }
                                             else
                                             {
-                                                player.SendMessage("Wrong password!", Color.Red);
+                                                tplayer.SendMessage("Wrong password!", Color.Red);
                                                 messageSent = true;
                                             }
                                         }
                                         else
                                         {
-                                            player.SendMessage("This sign is not protected!", Color.Red);
+                                            tplayer.SendMessage("This sign is not protected!", Color.Red);
                                             messageSent = true;
                                         }
 
-                                        player.SetState(SettingState.None);
+                                        splayer.SetState(SettingState.None);
                                         break;
                                     case SettingState.UnLocking:
                                         if (sign.IsLocked())
                                         {
-                                            if (sign.CheckPassword(player.PasswordForSign))
+                                            if (sign.CheckPassword(splayer.PasswordForSign))
                                             {
-                                                player.AddSignAccess(id); //unlock this sign for him
+                                                splayer.AddSignAccess(id); //unlock this sign for him
 
-                                                player.SendMessage("Sign editing unlocked!", Color.Red);
+                                                tplayer.SendMessage("Sign editing unlocked!", Color.Red);
                                                 messageSent = true;
                                             }
                                             else
                                             {
-                                                player.SendMessage("Wrong password!", Color.Red);
+                                                tplayer.SendMessage("Wrong password!", Color.Red);
                                                 messageSent = true;
                                             }
                                         }
                                         else
                                         {
-                                            player.SendMessage("This sign is not protected!", Color.Red);
+                                            tplayer.SendMessage("This sign is not protected!", Color.Red);
                                             messageSent = true;
                                         }
 
-                                        player.SetState(SettingState.None);
+                                        splayer.SetState(SettingState.None);
                                         break;
                                     case SettingState.WarpSetting:
                                         if ((sign.IsLocked() &&
-                                             (tplayer.Group.HasPermission(Permissions.editallsigns) || player.CanEditSign(id)))
+                                             (tplayer.Group.HasPermission(Permissions.editallsigns) || splayer.CanEditSign(id)))
                                             || !sign.IsLocked())
                                         {
-                                            sign.SetWarp(player.WarpForSign);
-                                            player.SendMessage("This sign will now warp to : " + player.WarpForSign,
+                                            sign.SetWarp(splayer.WarpForSign);
+                                            tplayer.SendMessage("This sign will now warp to : " + splayer.WarpForSign,
                                                                Color.Plum);
                                             messageSent = true;
                                         }
                                         else
                                         {
-                                            player.SendMessage("This sign is protected!", Color.Red);
+                                            tplayer.SendMessage("This sign is protected!", Color.Red);
                                             messageSent = true;
                                         }
-                                        player.SetState(SettingState.None);
+								
+                                        splayer.SetState(SettingState.None);
                                         break;
                                     case SettingState.DeletingWarp:
                                         if (sign.IsWarping())
                                         {
                                             if ((sign.IsLocked() &&
-                                                 (tplayer.Group.HasPermission(Permissions.editallsigns) || player.CanEditSign(id)))
+                                                 (tplayer.Group.HasPermission(Permissions.editallsigns) || splayer.CanEditSign(id)))
                                                 || !sign.IsLocked())
                                             {
                                                 sign.SetWarp("");
-                                                player.SendMessage("This sign is no longer warping.", Color.Red);
+                                                tplayer.SendMessage("This sign is no longer warping.", Color.Red);
                                                 messageSent = true;
                                             }
                                             else
                                             {
-                                                player.SendMessage("You don't have permission to edit this sign!",
+                                                tplayer.SendMessage("You don't have permission to edit this sign!",
                                                                    Color.Red);
                                                 messageSent = true;
                                             }
                                         }
                                         else
                                         {
-                                            player.SendMessage("This sign is not warp-enabled.", Color.Red);
+                                            tplayer.SendMessage("This sign is not warp-enabled.", Color.Red);
                                             messageSent = true;
                                         }
-                                        player.SetState(SettingState.None);
+								
+                                        splayer.SetState(SettingState.None);
                                         break;
                                 }
 
@@ -239,25 +241,25 @@ namespace SignControl
                                 {
                                     if (sign.IsLocked())
                                     {
-                                        if (tplayer.Group.HasPermission(Permissions.editallsigns) || player.CanEditSign(id))
+                                        if (tplayer.Group.HasPermission(Permissions.editallsigns) || splayer.CanEditSign(id))
 										{
-                                            player.SendMessage("This sign is protected. You are able to edit it.", Color.YellowGreen);
+                                            tplayer.SendMessage("This sign is protected. You are able to edit it.", Color.YellowGreen);
 										}
                                         else
 										{
-                                            player.SendMessage(
+                                            tplayer.SendMessage(
                                                 "This sign is protected. You are not able to edit it.",
                                                 Color.Yellow);
 											if (tplayer.Group.HasPermission(Permissions.canunlocksign))
 											{
-									        	player.SendMessage(
+									        	tplayer.SendMessage(
                                                 	"( If you know the password, you can unlock it using \"/sunlock PASSWORD\" command. )",
                                                 	Color.Yellow);
 											}
 										}
                                     }
                                     else
-                                        player.SendMessage("This sign is not protected.", Color.Yellow);
+                                        tplayer.SendMessage("This sign is not protected.", Color.Yellow);
                                 }
 
                                 if (sign.IsWarping())
@@ -265,17 +267,17 @@ namespace SignControl
                                     var warp = TShock.Warps.FindWarp(sign.GetWarp());
                                     if (warp.WarpName != null)
                                     {
-                                        player.Teleport((int) warp.WarpPos.X, (int) warp.WarpPos.Y);
-                                        player.SendMessage("You have been teleported to " + warp.WarpName, Color.Blue);
+                                        tplayer.Teleport((int) warp.WarpPos.X, (int) warp.WarpPos.Y);
+                                        tplayer.SendMessage("You have been teleported to " + warp.WarpName, Color.Blue);
                                     }
                                     else
-                                        player.SendMessage("Warp no longer exists!", Color.Red);
+                                        tplayer.SendMessage("Warp no longer exists!", Color.Red);
                                 }
                             }
 
-                            if (player.GetState() != SettingState.None)
+                            if (splayer.GetState() != SettingState.None)
                                 //if player is still setting something - end his setting
-                                player.SetState(SettingState.None);
+                                splayer.SetState(SettingState.None);
                         }
                         break;
 
@@ -293,7 +295,7 @@ namespace SignControl
 								//FIXME: hacked clients can theoreticaly bypass it ( seems like it checks by id only ) - needs testing
 							
                                 var id = Terraria.Sign.ReadSign(x, y);
-                                var player = Players[e.Msg.whoAmI];
+                                var splayer = Players[e.Msg.whoAmI];
                                 var tplayer = TShock.Players[e.Msg.whoAmI];
 
                                 if (id != -1)
@@ -302,7 +304,7 @@ namespace SignControl
 
                                     if (sign.IsLocked())
                                     {
-                                        if (!tplayer.Group.HasPermission(Permissions.editallsigns) && !player.CanEditSign(id))
+                                        if (!tplayer.Group.HasPermission(Permissions.editallsigns) && !splayer.CanEditSign(id))
                                             //if player doesnt have permission, then break and message
                                         {
                                             e.Handled = true;
