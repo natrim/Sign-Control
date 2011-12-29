@@ -259,7 +259,9 @@ namespace SignControl
 										}
                                     }
                                     else
+									{
                                         tplayer.SendMessage("This sign is not protected.", Color.Yellow);
+									}
                                 }
 
                                 if (sign.IsWarping())
@@ -271,7 +273,10 @@ namespace SignControl
                                         tplayer.SendMessage("You have been teleported to " + warp.WarpName, Color.Blue);
                                     }
                                     else
+									{
+										sign.SetWarp("");
                                         tplayer.SendMessage("Warp no longer exists!", Color.Red);
+									}
                                 }
                             }
 
@@ -307,7 +312,6 @@ namespace SignControl
                                         if (!tplayer.Group.HasPermission(Permissions.editallsigns) && !splayer.CanEditSign(id))
                                             //if player doesnt have permission, then break and message
                                         {
-                                            e.Handled = true;
                                             tplayer.SendMessage(
                                                 "This sign is protected with password. Your changes would be not visible to other players.",
                                                 Color.IndianRed);
@@ -317,6 +321,8 @@ namespace SignControl
                                                 	"( To edit this sign unlock it using \"/sunlock PASSWORD\" command. )",
                                                 	Color.IndianRed);
 											}
+										
+											e.Handled = true;
                                             tplayer.SendData(PacketTypes.SignNew, "", id);
                                             return;
                                         }

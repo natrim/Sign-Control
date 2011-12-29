@@ -51,7 +51,7 @@ namespace SignControl
 			if (!TShock.Groups.groups.Where (@group => @group.Name != "superadmin").Any (@group => group.HasPermission (canunlocksign))) {
 				if (TShock.Groups.GroupExists (TShock.Config.DefaultRegistrationGroupName)) {
 					TShock.Groups.AddPermissions (TShock.Config.DefaultRegistrationGroupName, new List<string> {canunlocksign});
-				} else if (TShock.Groups.GroupExists ("default")) {
+				} else if (TShock.Groups.GroupExists ("default")) { //else try default
 					TShock.Groups.AddPermissions ("default", new List<string> {canunlocksign});
 				}
 			}
