@@ -46,6 +46,7 @@
     <Compile Include="SignManager.cs" />
     <Compile Include="SPlayer.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Messages.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

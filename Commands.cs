@@ -23,19 +23,19 @@ namespace SignControl
             {
                 SignControl.Players[args.Player.Index].PasswordForSign = "";
                 SignControl.Players[args.Player.Index].SetState(SettingState.None);
-                args.Player.SendMessage("You are no longer selecting a sign.", Color.BlueViolet);
+                args.Player.SendMessage(Messages.stopSelecting, Color.BlueViolet);
             }
             else
             {
                 if (args.Parameters.Count != 1)
                 {
-                    args.Player.SendMessage("You must enter password to protect sign!", Color.Red);
+                    args.Player.SendMessage(Messages.enterPassword, Color.Red);
                     return;
                 }
 
                 SignControl.Players[args.Player.Index].PasswordForSign = args.Parameters[0];
                 SignControl.Players[args.Player.Index].SetState(SettingState.Setting);
-                args.Player.SendMessage("Open a sign to protect it.", Color.BlueViolet);
+                args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.protect), Color.BlueViolet);
             }
         }
 
@@ -45,26 +45,25 @@ namespace SignControl
             {
                 SignControl.Players[args.Player.Index].PasswordForSign = "";
                 SignControl.Players[args.Player.Index].SetState(SettingState.None);
-                args.Player.SendMessage("You are no longer selecting a sign.", Color.BlueViolet);
+                args.Player.SendMessage(Messages.stopSelecting, Color.BlueViolet);
             }
             else
             {
                 if (args.Player.Group.HasPermission(Permissions.editallsigns))
                 {
-                    args.Player.SendMessage(
-                        "You dont need to unlock signs because you have permission to edit all signs!", Color.BlueViolet);
+                    args.Player.SendMessage(Messages.notNeedUnlock, Color.BlueViolet);
                     return;
                 }
 
                 if (args.Parameters.Count != 1)
                 {
-                    args.Player.SendMessage("You must enter password to unlock sign!", Color.Red);
+                    args.Player.SendMessage(Messages.enterPassword, Color.Red);
                     return;
                 }
 
                 SignControl.Players[args.Player.Index].PasswordForSign = args.Parameters[0];
                 SignControl.Players[args.Player.Index].SetState(SettingState.UnLocking);
-                args.Player.SendMessage("Open a sign to unlock it.", Color.BlueViolet);
+                args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.unlock), Color.BlueViolet);
             }
         }
 
@@ -74,26 +73,26 @@ namespace SignControl
             {
                 SignControl.Players[args.Player.Index].PasswordForSign = "";
                 SignControl.Players[args.Player.Index].SetState(SettingState.None);
-                args.Player.SendMessage("You are no longer selecting a sign.", Color.BlueViolet);
+                args.Player.SendMessage(Messages.stopSelecting, Color.BlueViolet);
             }
             else
             {
                 if (args.Player.Group.HasPermission(Permissions.removesignprotection))
                 {
                     SignControl.Players[args.Player.Index].SetState(SettingState.Deleting);
-                    args.Player.SendMessage("Open a sign to delete it's protection.", Color.BlueViolet);
+                    args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.delete), Color.BlueViolet);
                 }
                 else
                 {
                     if (args.Parameters.Count != 1)
                     {
-                        args.Player.SendMessage("You must enter password to remove sign protection!", Color.Red);
+                        args.Player.SendMessage(Messages.enterPassword, Color.Red);
                         return;
                     }
 
                     SignControl.Players[args.Player.Index].PasswordForSign = args.Parameters[0];
                     SignControl.Players[args.Player.Index].SetState(SettingState.Deleting);
-                    args.Player.SendMessage("Open a sign to delete it's protection.", Color.BlueViolet);
+                    args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.delete), Color.BlueViolet);
                 }
             }
         }
@@ -102,7 +101,7 @@ namespace SignControl
         {
             SignControl.Players[args.Player.Index].PasswordForSign = "";
             SignControl.Players[args.Player.Index].SetState(SettingState.None);
-            args.Player.SendMessage("Selection of sign canceled.", Color.BlueViolet);
+            args.Player.SendMessage(Messages.stopSelecting, Color.BlueViolet);
         }
 
         private static void WarpSet(CommandArgs args)
@@ -110,25 +109,25 @@ namespace SignControl
             if (SignControl.Players[args.Player.Index].GetState() == SettingState.WarpSetting)
             {
                 SignControl.Players[args.Player.Index].SetState(SettingState.None);
-                args.Player.SendMessage("You are no longer selecting a sign.", Color.BlueViolet);
+                args.Player.SendMessage(Messages.stopSelecting, Color.BlueViolet);
             }
             else
             {
                 if (args.Parameters.Count != 1)
                 {
-                    args.Player.SendMessage("You must enter a warp the sign warps to!", Color.Red);
+                    args.Player.SendMessage(Messages.enterWarp, Color.Red);
                     return;
                 }
 
                 var warp = TShock.Warps.FindWarp(args.Parameters[0]);
                 if (warp.WarpName == null)
                 {
-                    args.Player.SendMessage("That is an invalid warp name!", Color.Red);
+                    args.Player.SendMessage(Messages.invalidWarp, Color.Red);
                     return;
                 }
                 SignControl.Players[args.Player.Index].WarpForSign = warp.WarpName;
                 SignControl.Players[args.Player.Index].SetState(SettingState.WarpSetting);
-                args.Player.SendMessage("Open a sign to make it warp-able.", Color.BlueViolet);
+                args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.warpable), Color.BlueViolet);
             }
         }
 
@@ -137,12 +136,12 @@ namespace SignControl
             if (SignControl.Players[args.Player.Index].GetState() == SettingState.DeletingWarp)
             {
                 SignControl.Players[args.Player.Index].SetState(SettingState.None);
-                args.Player.SendMessage("You are no longer selecting a sign.", Color.BlueViolet);
+                args.Player.SendMessage(Messages.stopSelecting, Color.BlueViolet);
             }
             else
             {
                 SignControl.Players[args.Player.Index].SetState(SettingState.DeletingWarp);
-                args.Player.SendMessage("Open a sign to delete its warp.", Color.BlueViolet);
+                args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.unwarpable), Color.BlueViolet);
             }
         }
     }

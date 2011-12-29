@@ -125,7 +125,7 @@ namespace SignControl
                                     case SettingState.Setting:
                                         if (sign.IsLocked())
                                         {
-                                            tplayer.SendMessage("This sign is already protected!", Color.Red);
+                                            tplayer.SendMessage(Messages.alreadyProtected, Color.Red);
                                             messageSent = true;
                                         }
                                         else
@@ -135,7 +135,7 @@ namespace SignControl
                                             sign.SetPassword(splayer.PasswordForSign);
                                             splayer.AddSignAccess(id); //unlock this sign for him
 
-                                            tplayer.SendMessage("This sign is now protected.", Color.Red);
+                                            tplayer.SendMessage(Messages.nowProtected, Color.Red);
                                             messageSent = true;
                                         }
 
@@ -150,18 +150,18 @@ namespace SignControl
                                                 sign.SetPassword("");
                                                 SPlayer.RemoveSignAccessFromAll(id); //remove access to this sign
 
-                                                tplayer.SendMessage("Sign protection removed!", Color.Red);
+                                                tplayer.SendMessage(Messages.removed, Color.Red);
                                                 messageSent = true;
                                             }
                                             else
                                             {
-                                                tplayer.SendMessage("Wrong password!", Color.Red);
+                                                tplayer.SendMessage(Messages.wrongPassword, Color.Red);
                                                 messageSent = true;
                                             }
                                         }
                                         else
                                         {
-                                            tplayer.SendMessage("This sign is not protected!", Color.Red);
+                                            tplayer.SendMessage(Messages.notProtected, Color.Red);
                                             messageSent = true;
                                         }
 
@@ -174,18 +174,18 @@ namespace SignControl
                                             {
                                                 splayer.AddSignAccess(id); //unlock this sign for him
 
-                                                tplayer.SendMessage("Sign editing unlocked!", Color.Red);
+                                                tplayer.SendMessage(Messages.unlocked, Color.Red);
                                                 messageSent = true;
                                             }
                                             else
                                             {
-                                                tplayer.SendMessage("Wrong password!", Color.Red);
+                                                tplayer.SendMessage(Messages.wrongPassword, Color.Red);
                                                 messageSent = true;
                                             }
                                         }
                                         else
                                         {
-                                            tplayer.SendMessage("This sign is not protected!", Color.Red);
+                                            tplayer.SendMessage(Messages.notProtected, Color.Red);
                                             messageSent = true;
                                         }
 
@@ -197,13 +197,12 @@ namespace SignControl
                                             || !sign.IsLocked())
                                         {
                                             sign.SetWarp(splayer.WarpForSign);
-                                            tplayer.SendMessage("This sign will now warp to : " + splayer.WarpForSign,
-                                                               Color.Plum);
+                                            tplayer.SendMessage(string.Format(Messages.warpTo, splayer.WarpForSign), Color.Plum);
                                             messageSent = true;
                                         }
                                         else
                                         {
-                                            tplayer.SendMessage("This sign is protected!", Color.Red);
+                                            tplayer.SendMessage(Messages.isProtected, Color.Red);
                                             messageSent = true;
                                         }
 								
@@ -217,19 +216,18 @@ namespace SignControl
                                                 || !sign.IsLocked())
                                             {
                                                 sign.SetWarp("");
-                                                tplayer.SendMessage("This sign is no longer warping.", Color.Red);
+                                                tplayer.SendMessage(Messages.notWarping, Color.Red);
                                                 messageSent = true;
                                             }
                                             else
                                             {
-                                                tplayer.SendMessage("You don't have permission to edit this sign!",
-                                                                   Color.Red);
+                                                tplayer.SendMessage(Messages.noEdit, Color.Red);
                                                 messageSent = true;
                                             }
                                         }
                                         else
                                         {
-                                            tplayer.SendMessage("This sign is not warp-enabled.", Color.Red);
+                                            tplayer.SendMessage(Messages.noWarp, Color.Red);
                                             messageSent = true;
                                         }
 								
@@ -243,24 +241,20 @@ namespace SignControl
                                     {
                                         if (tplayer.Group.HasPermission(Permissions.editallsigns) || splayer.CanEditSign(id))
 										{
-                                            tplayer.SendMessage("This sign is protected. You are able to edit it.", Color.YellowGreen);
+                                            tplayer.SendMessage(Messages.editable, Color.YellowGreen);
 										}
                                         else
 										{
-                                            tplayer.SendMessage(
-                                                "This sign is protected. You are not able to edit it.",
-                                                Color.Yellow);
+                                            tplayer.SendMessage(Messages.notEditable, Color.Yellow);
 											if (tplayer.Group.HasPermission(Permissions.canunlocksign))
 											{
-									        	tplayer.SendMessage(
-                                                	"( If you know the password, you can unlock it using \"/sunlock PASSWORD\" command. )",
-                                                	Color.Yellow);
+									        	tplayer.SendMessage(Messages.password, Color.Yellow);
 											}
 										}
                                     }
                                     else
 									{
-                                        tplayer.SendMessage("This sign is not protected.", Color.Yellow);
+                                        tplayer.SendMessage(Messages.notProtected, Color.Yellow);
 									}
                                 }
 
@@ -270,12 +264,11 @@ namespace SignControl
                                     if (warp.WarpName != null)
                                     {
                                         tplayer.Teleport((int) warp.WarpPos.X, (int) warp.WarpPos.Y);
-                                        tplayer.SendMessage("You have been teleported to " + warp.WarpName, Color.Blue);
+                                        tplayer.SendMessage(string.Format(Messages.teleported, warp.WarpName), Color.Blue);
                                     }
                                     else
 									{
-										sign.SetWarp("");
-                                        tplayer.SendMessage("Warp no longer exists!", Color.Red);
+                                        tplayer.SendMessage(Messages.wrongWarp, Color.Red);
 									}
                                 }
                             }
@@ -312,14 +305,10 @@ namespace SignControl
                                         if (!tplayer.Group.HasPermission(Permissions.editallsigns) && !splayer.CanEditSign(id))
                                             //if player doesnt have permission, then break and message
                                         {
-                                            tplayer.SendMessage(
-                                                "This sign is protected with password. Your changes would be not visible to other players.",
-                                                Color.IndianRed);
+                                            tplayer.SendMessage(Messages.stopEdit, Color.IndianRed);
 											if (tplayer.Group.HasPermission(Permissions.canunlocksign))
 											{
-                                            	tplayer.SendMessage(
-                                                	"( To edit this sign unlock it using \"/sunlock PASSWORD\" command. )",
-                                                	Color.IndianRed);
+                                            	tplayer.SendMessage(Messages.password, Color.IndianRed);
 											}
 										
 											e.Handled = true;
@@ -357,30 +346,27 @@ namespace SignControl
                             	{
 									var tplayer = TShock.Players[e.Msg.whoAmI];
 								
+									tplayer.SendMessage(Messages.isProtected, Color.Red);
+								
+									//display more verbose info to player who has permission to remove protection on this chest
 									if (tplayer.Group.HasPermission(Permissions.removesignprotection) ||
                                             tplayer.Group.HasPermission(Permissions.protectsign))
-                                            //display more verbose info to player who has permission to remove protection on this chest
-                                    {
-                                    	tplayer.SendMessage(
-                                                "This sign is protected. To remove it, first remove protection using \"/sunset\" command.",
-                                                Color.Red);
+                                    { 
+                                    	tplayer.SendMessage(Messages.removeSign, Color.Red);
                                     }
-                                    else
-                                    {
-                                        tplayer.SendMessage("This sign is protected!", Color.Red);
-                                    }
-
+								
+									//and stop
                                     tplayer.SendTileSquare(x, y);
                                  	e.Handled = true;
 									return;
                                  }
 							
 															
-								//reset sign to remove all ponys in it cause the sign will get removed and we dont want that another sign gel protected if placed in same place
+								//reset sign to remove all ponys in it cause the sign will get removed and we dont want that another sign get protected if placed in same place
 								sign.Reset();
                             }
 						
-							//TODO: protect the 2 tiles on which is locked sign placed
+							//TODO: protect the 2 tiles on which is locked sign placed to prevent auto remove
                         }
                         break;
                 }
