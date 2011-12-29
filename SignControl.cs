@@ -241,16 +241,19 @@ namespace SignControl
                                     {
                                         if (tplayer.Group.HasPermission(Permissions.editallsigns) || player.CanEditSign(id))
 										{
-                                            player.SendMessage("This sign is protected. You are able to edit it.", Color.Yellow);
+                                            player.SendMessage("This sign is protected. You are able to edit it.", Color.YellowGreen);
 										}
                                         else
 										{
                                             player.SendMessage(
                                                 "This sign is protected. You are not able to edit it.",
                                                 Color.Yellow);
-									        player.SendMessage(
-                                                "( If you know the password, you can unlock it using \"/sunlock PASSWORD\" command. )",
-                                                Color.Yellow);
+											if (tplayer.Group.HasPermission(Permissions.canunlocksign))
+											{
+									        	player.SendMessage(
+                                                	"( If you know the password, you can unlock it using \"/sunlock PASSWORD\" command. )",
+                                                	Color.Yellow);
+											}
 										}
                                     }
                                     else
@@ -306,9 +309,12 @@ namespace SignControl
                                             tplayer.SendMessage(
                                                 "This sign is protected with password. Your changes would be not visible to other players.",
                                                 Color.IndianRed);
-                                            tplayer.SendMessage(
-                                                "( To edit this sign unlock it using \"/sunlock PASSWORD\" command. )",
-                                                Color.IndianRed);
+											if (tplayer.Group.HasPermission(Permissions.canunlocksign))
+											{
+                                            	tplayer.SendMessage(
+                                                	"( To edit this sign unlock it using \"/sunlock PASSWORD\" command. )",
+                                                	Color.IndianRed);
+											}
                                             tplayer.SendData(PacketTypes.SignNew, "", id);
                                             return;
                                         }
