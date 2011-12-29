@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Gives you control over signs.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Natrim & Inspired by Deathmax's Chest-Control")]
-[assembly: AssemblyProduct("Sign-Control for TShosck")]
+[assembly: AssemblyProduct("Sign Control")]
 [assembly: AssemblyCopyright("Copyright © TShock 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ac589096-c286-4853-8376-21aaa700df46")]
+[assembly: Guid("ac589096-c286-4853-8376-21aaa800df46")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.2.1")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.1.2.2")]
+[assembly: AssemblyFileVersion("1.1.2.2")]

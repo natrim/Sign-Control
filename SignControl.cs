@@ -20,7 +20,7 @@ namespace SignControl
 
         public override string Name
         {
-            get { return AssemblyTitleAttribute; }
+            get { object[] attributes = Assembly.GetCallingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyProductAttribute)attributes[0]).Product; }
         }
 
         public override Version Version
@@ -30,13 +30,13 @@ namespace SignControl
 
         public override string Author
         {
-            get { return AssemblyCompanyAttribute; }
+            get { object[] attributes = Assembly.GetCallingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyCompanyAttribute)attributes[0]).Company; }
         }
 
-        public override string Description
-        {
-            get { return AssemblyDescriptionAttribute; }
-        }
+		public override string Description 
+		{ 
+			get { object[] attributes = Assembly.GetCallingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyDescriptionAttribute)attributes[0]).Description; } 
+		}
 
         public override void Initialize()
         {
@@ -371,6 +371,8 @@ namespace SignControl
 								//reset sign to remove all ponys in it cause the sign will get removed and we dont want that another sign gel protected if placed in same place
 								sign.Reset();
                             }
+						
+							//TODO: protect the 2 tiles on which is locked sign placed
                         }
                         break;
                 }
