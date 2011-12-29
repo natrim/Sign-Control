@@ -17,6 +17,17 @@ namespace SignControl
         {
             return Signs[id];
         }
+	
+		public static void AddSign(Sign sign)
+		{
+			SetSign(sign.GetID(), sign);
+		}
+		
+		public static void SetSign(int id, Sign sign)
+		{
+			if (Signs.Length > id)
+				Signs[id] = sign;
+		}
 
         public static void Load()
         {

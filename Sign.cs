@@ -22,6 +22,13 @@ namespace SignControl
             Position = new Vector2(0, 0);
             Warp = "";
         }
+		
+		public void Reset()
+		{
+            HashedPassword = "";
+            Position = new Vector2(0, 0);
+            Warp = "";			
+		}
 
         public void SetID(int id)
         {

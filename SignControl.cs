@@ -344,7 +344,8 @@ namespace SignControl
                             if (id != -1) //if have found sign
                             {
                             	var sign = SignManager.GetSign(id);
-                            	if (sign.IsLocked()) //if locked stop removing
+                            	
+								if (sign.IsLocked()) //if locked stop removing
                             	{
 									var tplayer = TShock.Players[e.Msg.whoAmI];
 								
@@ -363,7 +364,12 @@ namespace SignControl
 
                                     tplayer.SendTileSquare(x, y);
                                  	e.Handled = true;
+									return;
                                  }
+							
+															
+								//reset sign to remove all ponys in it cause the sign will get removed and we dont want that another sign gel protected if placed in same place
+								sign.Reset();
                             }
                         }
                         break;
