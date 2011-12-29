@@ -36,17 +36,10 @@ namespace SignControl
 
             if (!File.Exists(SavePath))
                 File.Create(SavePath).Close();
-			
-			//TODO: lazy loading of signs ( null checks )
-            for (var i = 0; i < Signs.Length; i++)
-			{
-                Signs[i] = new Sign();
-				Signs[i].SetID(i);
-			}
 
             var error = false;
-            foreach (
-                var args in File.ReadAllLines(SavePath).Select(line => line.Split('|')).Where(args => args.Length >= 4))
+            foreach (var args in File.ReadAllLines(SavePath).Select(line => line.Split('|')).Where(args => args.Length >= 4))
+			{
                 try
                 {
                     var sign = new Sign();
@@ -67,15 +60,26 @@ namespace SignControl
 							sign.SetID(id);
 						
 						//add to array
-						if (Signs.Length > sign.GetID())
-							Signs[sign.GetID()] = sign;
+						AddSign(sign);
 					}
                 }
                 catch
                 {
                     error = true;
                 }
-
+			}
+			
+			//TODO: lazy loading of signs ( null checks )
+			//fill empty slots
+            for (var i = 0; i < Signs.Length; i++)
+			{
+				if(Signs[i] == null)
+				{
+                	Signs[i] = new Sign();
+					Signs[i].SetID(i);
+				}
+			}
+			
             if (error)
                 Console.WriteLine("Failed to load some sign data, corresponding signs will be left unprotected.");
         }
