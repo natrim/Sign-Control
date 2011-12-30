@@ -20,7 +20,7 @@ namespace SignControl
 
         public override string Name
         {
-            get { object[] attributes = Assembly.GetCallingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyProductAttribute)attributes[0]).Product; }
+            get { object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyProductAttribute)attributes[0]).Product; }
         }
 
         public override Version Version
@@ -30,12 +30,12 @@ namespace SignControl
 
         public override string Author
         {
-            get { object[] attributes = Assembly.GetCallingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyCompanyAttribute)attributes[0]).Company; }
+            get { object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyCompanyAttribute)attributes[0]).Company; }
         }
 
 		public override string Description 
 		{ 
-			get { object[] attributes = Assembly.GetCallingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyDescriptionAttribute)attributes[0]).Description; } 
+			get { object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false); return attributes.Length == 0 ? "" : ((AssemblyDescriptionAttribute)attributes[0]).Description; } 
 		}
 
         public override void Initialize()
@@ -90,6 +90,8 @@ namespace SignControl
 			{
 				Players[i] = new SPlayer();
 			}
+			
+			Console.WriteLine(string.Format(Messages.loading, Name, Version, Author, Description));
 			
 			//check for update
 			new System.Threading.Thread(UpdateChecker).Start();
@@ -395,7 +397,7 @@ namespace SignControl
             Version version;
             if (!Version.TryParse(list[0], out version)) return;
             if (Version.CompareTo(version) >= 0) return;
-            TShock.Utils.Broadcast(string.Format(Messages.version, version), Color.Yellow);
+            TShock.Utils.Broadcast(string.Format(Messages.version, Name, version), Color.Yellow);
             if (list.Length > 1)
                 for (var i = 1; i < list.Length; i++)
 					if(list[i].Trim() != "")
