@@ -100,6 +100,7 @@ namespace SignControl
         private static void CancelSet(CommandArgs args)
         {
             SignControl.Players[args.Player.Index].PasswordForSign = "";
+            SignControl.Players[args.Player.Index].WarpForSign = "";
             SignControl.Players[args.Player.Index].SetState(SettingState.None);
             args.Player.SendMessage(Messages.stopSelecting, Color.BlueViolet);
         }
@@ -108,6 +109,7 @@ namespace SignControl
         {
             if (SignControl.Players[args.Player.Index].GetState() == SettingState.WarpSetting)
             {
+                SignControl.Players[args.Player.Index].WarpForSign = "";
                 SignControl.Players[args.Player.Index].SetState(SettingState.None);
                 args.Player.SendMessage(Messages.stopSelecting, Color.BlueViolet);
             }

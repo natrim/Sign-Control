@@ -5,9 +5,9 @@ namespace SignControl
     public class SPlayer
     {
         public string PasswordForSign = "";
+        public string WarpForSign = "";
         protected SettingState State = SettingState.None;
         protected List<int> UnlockedSigns = new List<int>();
-        public string WarpForSign = "";
 
         public SPlayer()
         {
