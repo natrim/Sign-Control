@@ -9,16 +9,12 @@ namespace SignControl
 	{
 		[Description("Allows the setting / unsetting of protection")]
 		public static readonly string protectsign;
-		
 		[Description("User can edit all protected signs")]
 		public static readonly string editallsigns;
-		
 		[Description("User can remove protection of all protected signs")]
 		public static readonly string removesignprotection;
-		
 		[Description("User can set / unset sign warpable")]
 		public static readonly string warpsign;
-		
 		[Description("User can unlock signs if he knows the right password for the sign")]
 		public static readonly string canunlocksign;
 		
