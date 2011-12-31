@@ -23,14 +23,45 @@ namespace SignControl
 				SignControl.Players [args.Player.Index].SetState (SettingState.None);
 				args.Player.SendMessage (Messages.stopSelecting, Color.BlueViolet);
 			} else {
-				if (args.Parameters.Count != 1) {
+				if (args.Parameters.Count < 1) {
 					args.Player.SendMessage (Messages.enterPassword, Color.Red);
 					return;
 				}
-
-				SignControl.Players [args.Player.Index].PasswordForSign = args.Parameters [0];
-				SignControl.Players [args.Player.Index].SetState (SettingState.Setting);
-				args.Player.SendMessage (string.Format (Messages.openSignTo, Messages.protect), Color.BlueViolet);
+				
+				if (args.Parameters.Count == 2) { //sets password for all signs in region
+					if (!args.Player.Group.HasPermission (TShockAPI.Permissions.manageregion)) {
+						args.Player.SendMessage (Messages.noPermissionRegion, Color.Red);
+						return;
+					}
+					
+					var region = TShock.Regions.GetRegionByName (args.Parameters [1]);
+					
+					if (region == null) {
+						args.Player.SendMessage (Messages.noRegion, Color.Red);
+						return;
+					}
+					
+					for (int l = 0; l < Terraria.Sign.maxSigns; l++) {
+						if (Terraria.Main.sign [l] != null) {
+							if (region.InArea (new Rectangle (Terraria.Main.sign [l].x, Terraria.Main.sign [l].y, 0, 0))) {
+								var sign = SignManager.GetSign (l);
+								sign.SetPassword (args.Parameters [0]);
+								sign.SetPosition (Terraria.Main.sign [l].x, Terraria.Main.sign [l].y);
+								SignControl.Players [args.Player.Index].AddSignAccess (l);
+							}
+						}
+					}
+					
+					args.Player.SendMessage (string.Format (Messages.regionLocked, args.Parameters [1]), Color.BlueViolet);
+					
+				} else if (args.Parameters.Count > 2) {
+					args.Player.SendMessage (Messages.tooManyParams, Color.Red);
+					return;
+				} else { //normal selecting
+					SignControl.Players [args.Player.Index].PasswordForSign = args.Parameters [0];
+					SignControl.Players [args.Player.Index].SetState (SettingState.Setting);
+					args.Player.SendMessage (string.Format (Messages.openSignTo, Messages.protect), Color.BlueViolet);
+				}
 			}
 		}
 
