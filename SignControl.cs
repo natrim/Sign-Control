@@ -11,6 +11,11 @@ namespace SignControl
     [APIVersion(1, 10)]
     public class SignControl : TerrariaPlugin
     {
+		
+        private static string updateUrl = "https://raw.github.com/natrim/Sign-Control/master/release.txt";
+        public static DateTime updateLastcheck = DateTime.MinValue;
+        private static readonly int updateCheckXMinutes = 120;
+		
         public static SPlayer[] Players;
 
         public SignControl(Main game)
@@ -25,7 +30,7 @@ namespace SignControl
 
         public override Version Version
         {
-            get { return Assembly.GetExecutingAssembly().GetName().Version; } //TODO: copy and adopt Deathmax's auto version check
+            get { return Assembly.GetExecutingAssembly().GetName().Version; }
         }
 
         public override string Author
@@ -42,8 +47,9 @@ namespace SignControl
         {
             NetHooks.GetData += NetHooks_GetData;
             ServerHooks.Leave += ServerHooks_Leave;
-			GameHooks.Initialize += OnInitialize;
-			GameHooks.PostInitialize += OnPostInitialize;
+            GameHooks.Initialize += OnInitialize;
+            GameHooks.PostInitialize += OnPostInitialize;
+            GameHooks.Update += OnUpdate;
             WorldHooks.SaveWorld += OnSaveWorld;
         }
 
@@ -52,14 +58,24 @@ namespace SignControl
             if(disposing)
 			{
 				NetHooks.GetData -= NetHooks_GetData;
-            	ServerHooks.Leave -= ServerHooks_Leave;
+				ServerHooks.Leave -= ServerHooks_Leave;
 				GameHooks.Initialize -= OnInitialize;
 				GameHooks.PostInitialize -= OnPostInitialize;
-            	WorldHooks.SaveWorld -= OnSaveWorld;
+				GameHooks.Update -= OnUpdate;
+				WorldHooks.SaveWorld -= OnSaveWorld;
 			}
 			
             base.Dispose(disposing);
         }
+		
+		private void OnUpdate()
+		{
+			if ((DateTime.Now - updateLastcheck).TotalMinutes >= updateCheckXMinutes)
+			{
+				System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(UpdateChecker));
+				updateLastcheck = DateTime.Now;
+			}
+		}
 
         private void OnSaveWorld(bool resettime, HandledEventArgs e)
         {
@@ -92,9 +108,6 @@ namespace SignControl
 			}
 			
 			Console.WriteLine(string.Format(Messages.loading, Name, Version, Author, Description));
-			
-			//check for update
-			new System.Threading.Thread(UpdateChecker).Start();
         }
 
         private void ServerHooks_Leave(int obj)
@@ -382,26 +395,34 @@ namespace SignControl
             }
         }
 		
-        private void UpdateChecker()
+        protected void UpdateChecker(Object stateInfo = null)
         {
             string raw;
             try
             {
-                raw = new System.Net.WebClient().DownloadString("https://raw.github.com/natrim/Sign-Control/master/release.txt");
+                raw = new System.Net.WebClient().DownloadString(updateUrl);
             }
             catch (Exception)
             {
                 return;
             }
-            var list = raw.Split('\n');
+            var list = raw.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             Version version;
             if (!Version.TryParse(list[0], out version)) return;
             if (Version.CompareTo(version) >= 0) return;
-            TShock.Utils.Broadcast(string.Format(Messages.version, Name, version), Color.Yellow);
-            if (list.Length > 1)
-                for (var i = 1; i < list.Length; i++)
-					if(list[i].Trim() != "")
-                    	TShock.Utils.Broadcast(list[i], Color.Yellow);
+            
+            Console.WriteLine(string.Format(Messages.version, Name, version));
+			
+			foreach (TSPlayer tplayer in TShock.Players)
+			{
+				if (tplayer != null && tplayer.Active && tplayer.Group.HasPermission(TShockAPI.Permissions.maintenance))
+				{
+					tplayer.SendMessage(string.Format(Messages.version, Name, version), Color.Yellow);
+		            if (list.Length > 1)
+	                	for (var i = 1; i < list.Length; i++)
+							tplayer.SendMessage(list[i], Color.Yellow);
+				}
+			}
         }
     }
 }
