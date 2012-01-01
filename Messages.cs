@@ -41,5 +41,7 @@ namespace SignControl
         public static readonly string unwarpable = "delete its warp";
         public static readonly string loading = "{0} v{1} is loaded and active.";
         public static readonly string version = "New {0} release is available: v{1}";
+
+        public static readonly string wrongBool = "Wrong boolean value, use TRUE or FALSE !";
     }
 }

@@ -32,7 +32,7 @@ namespace SignControl
                     return;
                 }
 
-                if (args.Parameters.Count == 3 && args.Parameters[1].ToUpper() == "REGION")
+                if ((args.Parameters.Count == 3 || args.Parameters.Count == 4) && args.Parameters[0].ToUpper() == "REGION")
                 { //sets password for all signs in region
                     if (!args.Player.Group.HasPermission(Permissions.protectallsigns))
                     {
@@ -40,7 +40,13 @@ namespace SignControl
                         return;
                     }
 
-                    var region = TShock.Regions.GetRegionByName(args.Parameters[2]);
+                    if (args.Parameters.Count == 4 && args.Parameters[3].ToUpper() != "TRUE" && args.Parameters[3].ToUpper() != "FALSE")
+                    {
+                        args.Player.SendMessage(Messages.wrongBool, Color.Red);
+                        return;
+                    }
+
+                    var region = TShock.Regions.GetRegionByName(args.Parameters[1]);
 
                     if (region == null)
                     {
@@ -69,8 +75,16 @@ namespace SignControl
                                     vasnull = true;
                                 }
 
+                                if (args.Parameters.Count == 4)
+                                {
+                                    if (args.Parameters[3].ToUpper() == "FALSE" && sign.IsLocked())
+                                    { //if already protected skip it
+                                        continue;
+                                    }
+                                }
+
                                 sign.SetID(l);
-                                sign.SetPassword(args.Parameters[0]);
+                                sign.SetPassword(args.Parameters[2]);
                                 sign.SetPosition(Terraria.Main.sign[l].x, Terraria.Main.sign[l].y);
 
                                 if (vasnull)
@@ -84,7 +98,7 @@ namespace SignControl
                     args.Player.SendMessage(string.Format(Messages.regionLocked, region.Name), Color.BlueViolet);
 
                 }
-                else if (args.Parameters.Count > 3)
+                else if (args.Parameters.Count > 1)
                 {
                     args.Player.SendMessage(Messages.tooManyParams, Color.Red);
                     return;
@@ -142,71 +156,75 @@ namespace SignControl
             }
             else
             {
-                if (args.Player.Group.HasPermission(Permissions.removesignprotection))
+                if (args.Parameters.Count < 1 && !args.Player.Group.HasPermission(Permissions.removesignprotection))
                 {
-                    SignControl.Players[args.Player.Index].SetState(SettingState.Deleting);
-                    args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.delete), Color.BlueViolet);
+                    args.Player.SendMessage(Messages.enterPassword, Color.Red);
+                    return;
                 }
-                else
-                {
-                    if (args.Parameters.Count < 1)
+
+                if ((args.Parameters.Count == 2 || args.Parameters.Count == 3) && args.Parameters[0].ToUpper() == "REGION")
+                { //removes protection off all signs in region
+                    if (!args.Player.Group.HasPermission(Permissions.protectallsigns))
                     {
-                        args.Player.SendMessage(Messages.enterPassword, Color.Red);
+                        args.Player.SendMessage(Messages.noPermissionRegionUnProtect, Color.Red);
                         return;
                     }
 
-                    if (args.Parameters.Count == 3 && args.Parameters[1].ToUpper() == "REGION")
-                    { //removes protection off all signs in region
-                        if (!args.Player.Group.HasPermission(Permissions.protectallsigns))
-                        {
-                            args.Player.SendMessage(Messages.noPermissionRegionUnProtect, Color.Red);
-                            return;
-                        }
+                    var region = TShock.Regions.GetRegionByName(args.Parameters[1]);
 
-                        var region = TShock.Regions.GetRegionByName(args.Parameters[2]);
+                    if (region == null)
+                    {
+                        args.Player.SendMessage(Messages.noRegion, Color.Red);
+                        return;
+                    }
 
-                        if (region == null)
-                        {
-                            args.Player.SendMessage(Messages.noRegion, Color.Red);
-                            return;
-                        }
+                    if (!region.HasPermissionToBuildInRegion(args.Player))
+                    {
+                        args.Player.SendMessage(Messages.noRegionPermission, Color.Red);
+                        return;
+                    }
 
-                        if (!region.HasPermissionToBuildInRegion(args.Player))
+                    for (int l = 0; l < Terraria.Sign.maxSigns; l++)
+                    {
+                        if (Terraria.Main.sign[l] != null)
                         {
-                            args.Player.SendMessage(Messages.noRegionPermission, Color.Red);
-                            return;
-                        }
-
-                        for (int l = 0; l < Terraria.Sign.maxSigns; l++)
-                        {
-                            if (Terraria.Main.sign[l] != null)
+                            if (region.InArea(new Rectangle(Terraria.Main.sign[l].x, Terraria.Main.sign[l].y, 0, 0)))
                             {
-                                if (region.InArea(new Rectangle(Terraria.Main.sign[l].x, Terraria.Main.sign[l].y, 0, 0)))
+                                var sign = SignManager.GetSign(l);
+                                if (sign != null && sign.IsLocked())
                                 {
-                                    var sign = SignManager.GetSign(l);
-                                    if (sign != null && sign.IsLocked())
+                                    if (args.Parameters.Count == 3)
                                     {
-                                        sign.SetPassword("");
-                                        SPlayer.RemoveSignAccessFromAll(l);
+                                        if (!sign.CheckPassword(args.Parameters[2]))
+                                        { //skip the sign if wrong password
+                                            continue;
+                                        }
                                     }
+
+                                    sign.SetPassword("");
+                                    SPlayer.RemoveSignAccessFromAll(l);
                                 }
                             }
                         }
-
-                        args.Player.SendMessage(string.Format(Messages.regionUnLocked, region.Name), Color.BlueViolet);
-
                     }
-                    else if (args.Parameters.Count > 3)
+
+                    args.Player.SendMessage(string.Format(Messages.regionUnLocked, region.Name), Color.BlueViolet);
+
+                }
+                else if (args.Parameters.Count > 1)
+                {
+                    args.Player.SendMessage(Messages.tooManyParams, Color.Red);
+                    return;
+                }
+                else
+                { //normal selecting
+                    if (args.Parameters.Count == 1)
                     {
-                        args.Player.SendMessage(Messages.tooManyParams, Color.Red);
-                        return;
-                    }
-                    else
-                    { //normal selecting
                         SignControl.Players[args.Player.Index].PasswordForSign = args.Parameters[0];
-                        SignControl.Players[args.Player.Index].SetState(SettingState.Deleting);
-                        args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.delete), Color.BlueViolet);
                     }
+
+                    SignControl.Players[args.Player.Index].SetState(SettingState.Deleting);
+                    args.Player.SendMessage(string.Format(Messages.openSignTo, Messages.delete), Color.BlueViolet);
                 }
             }
         }
