@@ -26,15 +26,12 @@ namespace SignControl
         public void AddSignAccess(int id)
         {
             UnlockedSigns.Add(id);
-            PasswordForSign = "";
         }
 
         public void RemoveSignAccess(int id)
         {
             if (UnlockedSigns.Contains(id))
                 UnlockedSigns.Remove(id);
-
-            PasswordForSign = "";
         }
 
         public bool CanEditSign(int id)
