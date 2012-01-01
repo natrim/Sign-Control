@@ -7,7 +7,9 @@ namespace SignControl
 		public static readonly string regionLocked = "All current signs in region {0} have been locked with provided password.";
 		public static readonly string regionUnLocked = "All current signs in region {0} have protection removed.";
 		public static readonly string noPermission = "You dont have the right permission!";
-		public static readonly string noPermissionRegion = "You dont have permission to protect all signs in a region!";
+		public static readonly string noRegionPermission = "You dont have permission for this region!";
+		public static readonly string noPermissionRegionProtect = "You dont have permission to protect all signs in a region!";
+		public static readonly string noPermissionRegionUnProtect = "You dont have permission to remove protection from all signs in a region!";
 		public static readonly string isProtected = "This sign is protected!";
 		public static readonly string alreadyProtected = "This sign is already protected!";
 		public static readonly string nowProtected = "This sign is now protected.";

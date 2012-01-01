@@ -17,6 +17,9 @@ namespace SignControl
 		public static readonly string warpsign;
 		[Description("User can unlock signs if he knows the right password for the sign")]
 		public static readonly string canunlocksign;
+		[Description("Users can protect / unprotect all signs in region they have build rights to")]
+		public static readonly string protectallsigns;
+
 		
 		static Permissions ()
 		{
@@ -33,6 +36,7 @@ namespace SignControl
 				permissions.Add (protectsign);
 				permissions.Add (editallsigns);
 				permissions.Add (removesignprotection);
+				permissions.Add (protectallsigns);
 			}
 			
 			if (!TShock.Groups.groups.Where (@group => @group.Name != "superadmin").Any (@group => group.HasPermission (warpsign))) {

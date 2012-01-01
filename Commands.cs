@@ -29,8 +29,8 @@ namespace SignControl
 				}
 				
 				if (args.Parameters.Count == 3 && args.Parameters [1].ToUpper () == "REGION") { //sets password for all signs in region
-					if (!args.Player.Group.HasPermission (Permissions.editallsigns) || !args.Player.Group.HasPermission (TShockAPI.Permissions.manageregion)) {
-						args.Player.SendMessage (Messages.noPermissionRegion, Color.Red);
+					if (!args.Player.Group.HasPermission (Permissions.protectallsigns)) {
+						args.Player.SendMessage (Messages.noPermissionRegionProtect, Color.Red);
 						return;
 					}
 					
@@ -41,23 +41,28 @@ namespace SignControl
 						return;
 					}
 					
+					if (!region.HasPermissionToBuildInRegion (args.Player)) {
+						args.Player.SendMessage (Messages.noRegionPermission, Color.Red);
+						return;	
+					}
+					
 					for (int l = 0; l < Terraria.Sign.maxSigns; l++) {
 						if (Terraria.Main.sign [l] != null) {
 							if (region.InArea (new Rectangle (Terraria.Main.sign [l].x, Terraria.Main.sign [l].y, 0, 0))) {
 								var sign = SignManager.GetSign (l);
 								
 								var vasnull = false;
-								if(sign == null){
-									sign = new Sign();
+								if (sign == null) {
+									sign = new Sign ();
 									vasnull = true;
 								}
 								
-								sign.SetID(l);
+								sign.SetID (l);
 								sign.SetPassword (args.Parameters [0]);
 								sign.SetPosition (Terraria.Main.sign [l].x, Terraria.Main.sign [l].y);
 								
-								if(vasnull)
-									SignManager.SetSign(l, sign);
+								if (vasnull)
+									SignManager.SetSign (l, sign);
 								
 								SignControl.Players [args.Player.Index].AddSignAccess (l);
 							}
@@ -122,8 +127,8 @@ namespace SignControl
 					}
 					
 					if (args.Parameters.Count == 3 && args.Parameters [1].ToUpper () == "REGION") { //removes protection off all signs in region
-						if (!args.Player.Group.HasPermission (Permissions.removesignprotection) || !args.Player.Group.HasPermission (TShockAPI.Permissions.manageregion)) {
-							args.Player.SendMessage (Messages.noPermissionRegion, Color.Red);
+						if (!args.Player.Group.HasPermission (Permissions.protectallsigns)) {
+							args.Player.SendMessage (Messages.noPermissionRegionUnProtect, Color.Red);
 							return;
 						}
 					
@@ -133,12 +138,17 @@ namespace SignControl
 							args.Player.SendMessage (Messages.noRegion, Color.Red);
 							return;
 						}
+						
+						if (!region.HasPermissionToBuildInRegion (args.Player)) {
+							args.Player.SendMessage (Messages.noRegionPermission, Color.Red);
+							return;	
+						}
 					
 						for (int l = 0; l < Terraria.Sign.maxSigns; l++) {
 							if (Terraria.Main.sign [l] != null) {
 								if (region.InArea (new Rectangle (Terraria.Main.sign [l].x, Terraria.Main.sign [l].y, 0, 0))) {
 									var sign = SignManager.GetSign (l);
-									if(sign != null && sign.IsLocked()){
+									if (sign != null && sign.IsLocked ()) {
 										sign.SetPassword ("");
 										SPlayer.RemoveSignAccessFromAll (l);
 									}
