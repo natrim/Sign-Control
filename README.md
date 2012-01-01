@@ -19,6 +19,11 @@ _editallsigns_ - permission for admins - can edit even protected signs
 
 _removesignprotection_ - permission for admins - can remove all signs protections
 
+_protectallsigns_ - users can protect / unprotect all signs in region they have access to, ignoring all locks - protected signs get overwriten
+
+ - _/sset_ _password_ REGION _region_name_
+ - _/sunset_ _password_ REGION _region_name_
+
 ### Todo/Ideas:
 - another access methods (region, owner, ...)
 - lock reading
