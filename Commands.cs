@@ -89,8 +89,13 @@ namespace SignControl
 					return;
 				}
 
-				if (args.Parameters.Count != 1) {
+				if (args.Parameters.Count < 1) {
 					args.Player.SendMessage (Messages.enterPassword, Color.Red);
+					return;
+				}
+				
+				if (args.Parameters.Count > 1) {
+					args.Player.SendMessage (Messages.tooManyParams, Color.Red);
 					return;
 				}
 
@@ -170,8 +175,13 @@ namespace SignControl
 				SignControl.Players [args.Player.Index].SetState (SettingState.None);
 				args.Player.SendMessage (Messages.stopSelecting, Color.BlueViolet);
 			} else {
-				if (args.Parameters.Count != 1) {
+				if (args.Parameters.Count < 1) {
 					args.Player.SendMessage (Messages.enterWarp, Color.Red);
+					return;
+				}
+				
+				if (args.Parameters.Count > 1) {
+					args.Player.SendMessage (Messages.tooManyParams, Color.Red);
 					return;
 				}
 
