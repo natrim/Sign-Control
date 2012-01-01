@@ -33,15 +33,21 @@ namespace SignControl
         {
             var permissions = new List<string>();
 
-            if (!TShock.Groups.groups.Where(@group => @group.Name != "superadmin").Any(@group => group.HasPermission(protectsign)))
+            var Groups = TShock.Groups.groups.Where(@group => @group.Name != "superadmin");
+
+            if (!Groups.Any(@group => group.HasPermission(protectsign)))
             {
                 permissions.Add(protectsign);
                 permissions.Add(editallsigns);
                 permissions.Add(removesignprotection);
+            }
+
+            if (!Groups.Any(@group => group.HasPermission(protectallsigns)))
+            {
                 permissions.Add(protectallsigns);
             }
 
-            if (!TShock.Groups.groups.Where(@group => @group.Name != "superadmin").Any(@group => group.HasPermission(warpsign)))
+            if (!Groups.Any(@group => group.HasPermission(warpsign)))
             {
                 permissions.Add(warpsign);
             }
