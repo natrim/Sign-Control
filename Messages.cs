@@ -43,5 +43,6 @@ namespace SignControl
         public static readonly string version = "New {0} release is available: v{1}";
 
         public static readonly string wrongBool = "Wrong boolean value, use TRUE or FALSE !";
+        public static readonly string wrongtile = "You are trying to change non-existent sign!";
     }
 }

@@ -335,6 +335,14 @@ namespace SignControl
                                         }
                                     }
                                 }
+                                else 
+                                { 
+                                    //there is no sign so stop editing - little fixy .)
+                                    tplayer.SendMessage(Messages.wrongtile, Color.IndianRed);
+                                    tplayer.SendData(PacketTypes.SignNew, "", id);
+                                    e.Handled = true;
+                                    return;
+                                }
                             }
                         }
                         break;
