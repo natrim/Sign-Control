@@ -316,6 +316,7 @@ namespace SignControl
 
                                 if (id != -1)
                                 {
+                                    //FIXME: get sign by x and y to prevent that bug
                                     var sign = SignManager.GetSign(id);
 
                                     if (sign.IsLocked())
@@ -366,6 +367,7 @@ namespace SignControl
 
                             if (id != -1) //if have found sign
                             {
+                                //FIXME: get sign by x and y
                                 var sign = SignManager.GetSign(id);
 
                                 if (sign.IsLocked()) //if locked stop removing
@@ -392,7 +394,7 @@ namespace SignControl
                                 sign.Reset();
                             }
 
-                            //TODO: protect the 2 tiles on which is locked sign placed to prevent auto remove
+                            //TODO: protect the 2 tiles on which is locked sign placed to prevent auto remove (checking x+-1 and y+-1 of tile for sign)
                         }
                         break;
                 }

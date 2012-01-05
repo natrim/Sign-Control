@@ -13,6 +13,8 @@ namespace SignControl
         private static readonly string ControlDirectory = Path.Combine(TShock.SavePath, "signcontrol");
         private static readonly string SavePath = Path.Combine(ControlDirectory, Main.worldID + ".txt");
 
+        //TODO: add signs to db
+
         public static Sign GetSign(int id)
         {
             return Signs[id];

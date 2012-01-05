@@ -108,5 +108,7 @@ namespace SignControl
             using (var cryptoTransformSHA1 = new SHA1CryptoServiceProvider())
                 return BitConverter.ToString(cryptoTransformSHA1.ComputeHash(buffer)).Replace("-", "");
         }
+
+        //TODO: return and fix TileIsSign - Tile and TileData
     }
 }
