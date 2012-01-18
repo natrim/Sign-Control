@@ -8,10 +8,9 @@ using Terraria;
 
 namespace SignControl
 {
-    [APIVersion(1, 10)]
+    [APIVersion(1, 11)]
     public class SignControl : TerrariaPlugin
     {
-
         private static string updateUrl = "https://raw.github.com/natrim/Sign-Control/master/release.txt";
         public static DateTime updateLastcheck = DateTime.MinValue;
         private static readonly int updateCheckXMinutes = 120;
